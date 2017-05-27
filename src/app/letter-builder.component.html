@@ -1,0 +1,56 @@
+<div class='container'>
+  <h1>{{project.name}}</h1>
+  <h2>{{project.description}}</h2>
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Your Information</h3>
+      </div>
+      <div class="panel-body">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input [(ngModel)]="name" placeholder="John Doe" required/>
+        </div>
+        <div class=form-group>
+          <label for="emailAddress">Email Address</label>
+          <input [(ngModel)]="emailAddress" placeholder="address@domain.com" required/>
+        </div>
+      </div>
+    </div>
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Your Information</h3>
+    </div>
+    <div class="panel-body">
+      Your relationship to the area:
+    </div>
+    <div>
+      <li *ngFor="let reason of relationshipReasons">
+        <input type="checkbox" [(ngModel)]="reason.appliesToUser" />{{reason.description}}
+      </li>
+    </div>
+  </div>
+
+  <div>
+    Why do you support this project?
+  </div>
+  <div>
+    <li *ngFor="let reason of supportReasons">
+      <input type="checkbox" />{{reason.description}}
+    </li>
+  </div>
+
+  <div>
+    What do you think could be improved?
+  </div>
+  <div>
+    <li *ngFor="let reason of improveReasons">
+      <input type="checkbox" />{{reason.description}}
+    </li>
+  </div>
+  <div>
+    <button (click)="generateText()" class="btn btn-success">Generate Text</button>
+  </div>
+  <div><textarea [(ngModel)]="letter" placeholder="Your letter goes here" rows="12" cols='90'></textarea></div>
+</div>
