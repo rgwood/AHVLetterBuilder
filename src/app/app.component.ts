@@ -52,7 +52,7 @@ const PROJECTS: Project[] = [
 ];
 
 @Component({
-  selector: 'my-app',
+  selector: 'app-root',
   template: `
     <h1>{{project.name}}</h1>
     <h2>{{project.description}}</h2>
