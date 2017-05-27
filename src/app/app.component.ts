@@ -4,14 +4,14 @@ export class Project {
   id: number;
   name: string;
   description: string;
-  isRental: boolean; //todo: use tags?
+  tags: string[];
 }
 
 export class Reason {
   id: string;
   description: string;
-  appliesToUser: boolean=false; //do default property values even work in TS? Still need to specify false below...
-  tags: string[]; 
+  appliesToUser: boolean;
+  tags: string[];
 }
 
 const RELATIONSHIPREASONS: Reason[] = [
@@ -26,7 +26,7 @@ const RELATIONSHIPREASONS: Reason[] = [
 const SUPPORTREASONS: Reason[] = [
 {id:'stayInArea', description:'I want to stay in the neighbourhood', appliesToUser:false, tags:[]},
 {id:'moveToArea', description:'I want to move to this neighbourhood', appliesToUser:false, tags:[]},
-{id:'rentalSupport', description:'I want more rental homes in Vancouver', appliesToUser:false, tags:['rental']},
+{id:'rentalSupport', description:'I want more rental homes in Vancouver', appliesToUser:false, tags:['RENTAL']},
 {id:'friendsFamilySupport', description:'I want my friends and family to be able to live in this neighbourhood', appliesToUser:false, tags:[]},
 {id:'vibrantSupport', description:'This project will make the neighbourhood more vibrant', appliesToUser:false, tags:[]},
 {id:'retailSupport', description:'I want more shops in the neighbourhood', appliesToUser:false, tags:[]},
@@ -44,11 +44,11 @@ const IMPROVEREASONS: Reason[] = [
 ];
 
 const PROJECTS: Project[] = [
-  { id: 15, name: '228 E 7th Ave' , description:'Great project. Much housing', isRental:true},
-  { id: 17, name: 'Dynama'  , description:'Great project. ', isRental:true},
-  { id: 18, name: 'Dr IQ'   , description:'Great project. ', isRental:true},
-  { id: 19, name: 'Magma'   , description:'Great project. ', isRental:true},
-  { id: 20, name: 'Tornado' , description:'Great project. ', isRental:true}
+  { id: 15, name: '228 E 7th Ave' , description: 'Great project. Much housing', tags:['RENTAL']},
+  { id: 17, name: 'Dynama'  , description: 'Great project. ', tags:[]},
+  { id: 18, name: 'Dr IQ'   , description: 'Great project. ', tags:[]},
+  { id: 19, name: 'Magma'   , description: 'Great project. ', tags:[]},
+  { id: 20, name: 'Tornado' , description: 'Great project. ', tags:[]}
 ];
 
 @Component({
@@ -62,6 +62,7 @@ const PROJECTS: Project[] = [
     <div>
     <input [(ngModel)]="emailAddress" placeholder="Email Address"/>
     </div>
+
     <div>
        Your relationship to the area:
     </div>
@@ -88,8 +89,11 @@ const PROJECTS: Project[] = [
        <input type="checkbox"/>{{reason.description}}
     </li>
     </div>
-
+    <div>
     <button (click)="generateText()">Generate Text</button>
+    </div>
+    <div><textarea  [(ngModel)]="letter" placeholder="Your letter goes here" rows="12" cols='90'></textarea></div>
+
   `,
   styles: [`
     .selected {
@@ -143,17 +147,31 @@ const PROJECTS: Project[] = [
 })
 export class AppComponent {
   title = 'AHV Letter Builder';
-  relationshipReasons = RELATIONSHIPREASONS;
-  supportReasons = SUPPORTREASONS;
-  improveReasons = IMPROVEREASONS;
-  name : string;
-  emailAddress : string;
-  
   project = PROJECTS.filter(function(p) { return p.id === 15; })[0];//todo: get project ID from URL or something
 
-  generateText(): void {
-    this.relationshipReasons.filter(function(r){return r.appliesToUser}).forEach(element => {
-      alert(element.description);
+  relationshipReasons = this.getApplicableReasonsForProject(this.project, RELATIONSHIPREASONS);
+  supportReasons = this.getApplicableReasonsForProject(this.project, SUPPORTREASONS);
+  improveReasons = this.getApplicableReasonsForProject(this.project, IMPROVEREASONS);
+  name : string;
+  emailAddress : string;
+  letter: string;
+
+   generateText(): void {
+     this.letter = '';
+    this.relationshipReasons.filter(function(r){return r.appliesToUser; }).forEach(element => {
+      this.letter += element.description;
+      // todo: generate a real letter
     });
   }
+
+   getApplicableReasonsForProject(project: Project, allReasons: Reason[]): Reason[]
+   {
+     var ret = allReasons.filter(function(r){return r.tags.length === 0; });
+     project.tags.forEach(tag => {
+       var tagMatches = allReasons.filter(function(r){return r.tags.includes(tag)});
+       ret = ret.concat(tagMatches);
+     });
+     return ret;
+   }
+
 }
