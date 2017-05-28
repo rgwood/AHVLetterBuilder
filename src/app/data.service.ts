@@ -15,4 +15,10 @@ export class DataService {
   getPersonalizations(type: PersonalizationType): Personalization[]{
     return PERSONALIZATIONS.filter(function(p){return p.type === type});
   }
+
+  getTextBank(): {[id: string] : string[]} {
+    let map: { [id: string]: string[]; } = { };
+    map["wantLiveNearby"] = ["I want to live nearby.","Lemme live nearby"];
+    return map;
+  }
 }

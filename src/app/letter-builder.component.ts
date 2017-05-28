@@ -34,8 +34,12 @@ export class LetterBuilderComponent {
 
   generateText(): void {
     this.letter = '';
+    let textBank = this.dataService.getTextBank();
     this.relationships.filter(function (r) { return r.appliesToUser; }).forEach(element => {
-      this.letter += element.description;
+      if(textBank[element.id])
+      {
+        this.letter += textBank[element.id][1];
+      }
       // todo: generate a real letter
     });
   }
