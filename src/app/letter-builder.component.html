@@ -1,57 +1,64 @@
 <div class='container'>
-  <h1>{{project.name}}</h1>
-  <h4>{{project.description}}</h4>
+  <div class='row'>
+    <h1>{{project.name}}</h1>
+    <h4>{{project.description}}</h4>
 
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h3 class="panel-title">Your Information</h3>
-    </div>
-    <div class="panel-body">
-      <div class="form-group">
-        <label for="name">Full Name</label>
-        <input [(ngModel)]="name" placeholder="John Doe" required/>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Your Information</h3>
       </div>
-      <div class=form-group>
-        <label for="emailAddress">Email Address</label>
-        <input [(ngModel)]="emailAddress" placeholder="address@domain.com" required/>
-      </div>
-    </div>
-  </div>
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h3 class="panel-title">Your Information</h3>
-    </div>
-    <div class="panel-body">
-      <div class="checkbox" *ngFor="let reason of relationshipReasons">
-        <label><input type="checkbox" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+      <div class="panel-body">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input [(ngModel)]="name" placeholder="John Doe" required/>
+        </div>
+        <div class=form-group>
+          <label for="emailAddress">Email Address</label>
+          <input [(ngModel)]="emailAddress" placeholder="address@domain.com" required/>
+        </div>
+        <div class=form-group>
+          <label for="physicalAddress">Address (optional)</label>
+          <input [(ngModel)]="physicalAddress" placeholder="1234 Abundant Ave, Vancouver, V5T 6K5" />
+        </div>
       </div>
     </div>
-  </div>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Your relation to the project</h3>
+      </div>
+      <div class="panel-body">
+        <div class="checkbox" *ngFor="let reason of relationships">
+          <label><input type="checkbox" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+        </div>
+      </div>
+    </div>
 
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h3 class="panel-title">Why do you support this project?</h3>
-    </div>
-    <div class="panel-body">
-      <div class="checkbox" *ngFor="let reason of supportReasons">
-        <label><input type="checkbox" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Why do you support this project?</h3>
+      </div>
+      <div class="panel-body">
+        <div class="checkbox" *ngFor="let reason of supportReasons">
+          <label><input type="checkbox" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h3 class="panel-title">What do you think could be improved?</h3>
-    </div>
-    <div class="panel-body">
-      <div class="checkbox" *ngFor="let reason of improveReasons">
-        <label><input type="checkbox" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">What do you think could be improved?</h3>
+      </div>
+      <div class="panel-body">
+        <div class="checkbox" *ngFor="let reason of improveSuggestions">
+          <label><input type="checkbox" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div>
-    <button (click)="generateText()" class="btn btn-success">Generate Text</button>
+    <div>
+      <button (click)="generateText()" class="btn btn-success">Generate Letter</button>
+    </div>
+    <h4>Generated letter</h4>
+    <div><textarea [(ngModel)]="letter" placeholder="Your letter goes here" rows="12" cols='90'></textarea></div>
   </div>
-  <div><textarea [(ngModel)]="letter" placeholder="Your letter goes here" rows="12" cols='90'></textarea></div>
 </div>
