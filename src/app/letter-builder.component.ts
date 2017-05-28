@@ -38,9 +38,9 @@ export class LetterBuilderComponent {
     this.relationships.filter(function (r) { return r.appliesToUser; }).forEach(element => {
       if(textBank[element.id])
       {
-        this.letter += textBank[element.id][1];
+        this.letter += this.dataService.getRandomTextBankEntry(element.id);
       }
-      // todo: generate a real letter
+      // todo: footer, etc.
     });
   }
 

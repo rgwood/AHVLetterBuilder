@@ -15,10 +15,21 @@ export class DataService {
   getPersonalizations(type: PersonalizationType): Personalization[]{
     return PERSONALIZATIONS.filter(function(p){return p.type === type});
   }
+  getRandomTextBankEntry(id: string): string {
+    let sentences = this.getTextBank()[id];
+    return sentences[this.getRandomIntInclusive(0, sentences.length -1)];
+  }
 
+//todo: this is terrible, store the data somewhere better and maybe memoize it
   getTextBank(): {[id: string] : string[]} {
     let map: { [id: string]: string[]; } = { };
     map["wantLiveNearby"] = ["I want to live nearby.","Lemme live nearby"];
     return map;
   }
+  getRandomIntInclusive(min, max): number {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
 }
