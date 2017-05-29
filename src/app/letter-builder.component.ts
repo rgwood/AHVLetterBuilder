@@ -22,14 +22,18 @@ export class LetterBuilderComponent {
   emailAddress: string;
   physicalAddress: string;
   letter: string;
+  dataLoaded: boolean = false;
 
   ngOnInit(): void {
     var projectId = Number(this.getQueryParams(location.search)['p']);
     console.log('project ID: ' + projectId);
-    this.project = this.dataService.getProject(projectId || 1); //the "not found" project. todo: a proper 404 page?
-    this.relationships = this.getApplicablePersonalizationsForProject(this.project, this.dataService.getPersonalizations(PersonalizationType.Relationship));
-    this.supportReasons = this.getApplicablePersonalizationsForProject(this.project, this.dataService.getPersonalizations(PersonalizationType.SupportReason));
-    this.improveSuggestions = this.getApplicablePersonalizationsForProject(this.project, this.dataService.getPersonalizations(PersonalizationType.ImproveSuggestion));
+    //this chain is kind of crazy. this is almost definitely wrong
+    this.dataService.getProject(projectId || 1) //1 is the "not found" project. todo: a proper 404 page?
+    .then(project => this.project =  project)
+    .then(() => this.relationships = this.getApplicablePersonalizationsForProject(this.project, this.dataService.getPersonalizations(PersonalizationType.Relationship)))
+    .then(() => this.supportReasons = this.getApplicablePersonalizationsForProject(this.project, this.dataService.getPersonalizations(PersonalizationType.SupportReason)))
+    .then(() =>  this.improveSuggestions = this.getApplicablePersonalizationsForProject(this.project, this.dataService.getPersonalizations(PersonalizationType.ImproveSuggestion)))
+    .then(() => this.dataLoaded = true); 
   }
 
   generateText(): void {
