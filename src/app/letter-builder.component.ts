@@ -25,15 +25,20 @@ export class LetterBuilderComponent {
   dataLoaded: boolean = false;
 
   ngOnInit(): void {
-    var projectId = Number(this.getQueryParams(location.search)['p']);
-    console.log('project ID: ' + projectId);
-    //this chain is kind of crazy. this is almost definitely wrong
-    this.dataService.getProject(projectId || 1) //1 is the "not found" project. todo: a proper 404 page?
-    .then(project => this.project =  project)
-    .then(() => this.relationships = this.getApplicablePersonalizationsForProject(this.project, this.dataService.getPersonalizations(PersonalizationType.Relationship)))
-    .then(() => this.supportReasons = this.getApplicablePersonalizationsForProject(this.project, this.dataService.getPersonalizations(PersonalizationType.SupportReason)))
-    .then(() =>  this.improveSuggestions = this.getApplicablePersonalizationsForProject(this.project, this.dataService.getPersonalizations(PersonalizationType.ImproveSuggestion)))
-    .then(() => this.dataLoaded = true); 
+    this.dataService.init(() => {
+      console.log('data loaded baby!!!');
+      var projectId = this.getQueryParams(location.search)['p'];
+      var proj = this.dataService.getProject(projectId);
+      if(proj == null)
+        this.project = new Project('404', '404','Project not found',[]);
+      else
+        this.project = this.dataService.getProject(projectId);
+
+      this.relationships = this.getApplicablePersonalizationsForProject(this.project, this.dataService.getPersonalizations(PersonalizationType.Relationship));
+      this.supportReasons = this.getApplicablePersonalizationsForProject(this.project, this.dataService.getPersonalizations(PersonalizationType.SupportReason));
+      this.improveSuggestions = this.getApplicablePersonalizationsForProject(this.project, this.dataService.getPersonalizations(PersonalizationType.ImproveSuggestion));
+      this.dataLoaded = true;
+    });
   }
 
   generateText(): void {

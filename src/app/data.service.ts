@@ -2,64 +2,52 @@ import { Injectable } from '@angular/core';
 import { Project } from './project';
 import { Personalization } from './personalization';
 import { PersonalizationType } from './personalization';
-import { PROJECTS } from './mock-data'; //todo uh don't use hardcoded data
-import { PERSONALIZATIONS } from './mock-data'; //ditto
+import { PERSONALIZATIONS } from './mock-data'; //todo uh don't use hardcoded data
 import { OnInit } from '@angular/core';
 import * as Tabletop from 'tabletop';
 
 @Injectable()
 export class DataService {
 
-  public projectCache: Project[];
+  private projectCache: Project[];
 
-  handleProjectData = (data: any, tabletop: any) =>
-  {
+
+  constructor(){
     this.projectCache = new Array<Project>();
+  }
+
+  init(callback: ()=> void)
+  {
+    //todo: don't hardcode key? Ahh who cares
+    Tabletop.init( { key: '1kIkLMFe6VG8Fgpy0bLgLdelFzXppda0yl4jdKo9WICM',
+                   callback: (data, tabletop) => {
+                     this.handleProjectData(data, tabletop, this.projectCache);
+                     callback();
+                   }, 
+                   simpleSheet: true } );
+  }
+
+  //this cache parameter is dumb and shouldn't be necessary. For some reason I just couldn't get "this" to bind correctly in this method.
+  handleProjectData = (data: any, tabletop: any, cache: Project[]) => 
+  {
     let array = data as object[];
     array.forEach(function(p){
       //todo: error handling
-      let newProject = new Project();
-      newProject.id = Number(p["ID"]);
-      newProject.name = p["Name"];
-      newProject.description = p["Description"];
-      newProject.tags = (p["Tags"] as string).split(",");
-      this.projectCache.push(newProject); 
-      console.log(newProject.name +' added to cache');
+      let id = p["ID"];
+      let name = p["Name"];
+      let description = p["Description"];
+      let tags = (p["Tags"] as string).split(",");
+      let newProject = new Project(id, name, description, tags);
+      cache.push(newProject); 
     });
-
   }
-  //loadProjectsFromSpreadsheet(): Promise<null>
-  getProject(id: number): Promise<Project> {
-    if(this.projectCache != null)
-    {
-      return new Promise(resolve => {resolve(PROJECTS[1])});
-    }
+
+  getProject(id: string): Project {
+    let matches = this.projectCache.filter(function(p) { return p.id === id; });
+    if(matches.length == 0)
+      return null;
     else
-    {
-    
-    }
-
-    return new Promise(resolve => {
-    // Simulate server latency with 2 second delay
-    //setTimeout(() => resolve(PROJECTS[1]), 2000);});
-
-    //todo revert 
-    
-          Tabletop.init( { key: 'https://docs.google.com/spreadsheets/d/1kIkLMFe6VG8Fgpy0bLgLdelFzXppda0yl4jdKo9WICM/pubhtml',
-                   callback: this.handleProjectData, 
-                   simpleSheet: true } )});
-
-
-    //}
-    /*console.log('projectLoadingFinished: '+ this.projectLoadingFinished);
-    var intvl = setInterval(function() {
-      if (this.projectLoadingFinished === true) { 
-        console.log('project loading finished, i guess');
-
-        clearInterval(intvl);}}, 10000);//todo change back to a quick timer
-    */
-    //return this.projectCache.filter(function(p) { return p.id === id; })[0];
-    
+      return matches[0];
   }
 
   getPersonalizations(type: PersonalizationType): Personalization[]{
