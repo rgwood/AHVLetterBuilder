@@ -51,7 +51,7 @@
           <h3 class="panel-title">What do you think could be improved?</h3>
         </div>
         <div class="panel-body">
-          <div class="form-check" *ngFor="let reason of improveSuggestions">
+          <div class="form-check" *ngFor="let reason of improvements">
             <label class="form-check-label"><input type="checkbox" name="improve"  class="form-check-input"[(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
           </div>
         </div>

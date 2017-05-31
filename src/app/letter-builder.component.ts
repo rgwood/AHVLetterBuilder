@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Project } from './project';
-import { Personalization } from './personalization';
-import { PersonalizationType } from './personalization';
+import { Option } from './option';
+import { OptionType } from './option';
 import { DataService } from './data.service';
 import { OnInit } from '@angular/core';
 
@@ -15,9 +15,9 @@ export class LetterBuilderComponent {
 
   title = 'AHV Letter Builder';
   project: Project
-  relationships: Personalization[]
-  supportReasons: Personalization[]
-  improveSuggestions: Personalization[]
+  relationships: Option[]
+  supportReasons: Option[]
+  improvements: Option[]
   name: string;
   emailAddress: string;
   physicalAddress: string;
@@ -34,9 +34,9 @@ export class LetterBuilderComponent {
       else
         this.project = this.dataService.getProject(projectId);
 
-      this.relationships = this.getApplicablePersonalizationsForProject(this.project, this.dataService.getPersonalizations(PersonalizationType.Relationship));
-      this.supportReasons = this.getApplicablePersonalizationsForProject(this.project, this.dataService.getPersonalizations(PersonalizationType.SupportReason));
-      this.improveSuggestions = this.getApplicablePersonalizationsForProject(this.project, this.dataService.getPersonalizations(PersonalizationType.ImproveSuggestion));
+      this.relationships = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Relationship));
+      this.supportReasons = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.SupportReason));
+      this.improvements = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Improvement));
       this.dataLoaded = true;
     });
   }
@@ -53,10 +53,10 @@ export class LetterBuilderComponent {
     });
   }
 
-  getApplicablePersonalizationsForProject(project: Project, allReasons: Personalization[]): Personalization[] {
-    var ret = allReasons.filter(function (r) { return r.tags.length === 0; });
+  getApplicableOptionsForProject(project: Project, allOptions: Option[]): Option[] {
+    var ret = allOptions.filter(function (r) { return r.tags.length === 0; });
     project.tags.forEach(tag => {
-      var tagMatches = allReasons.filter(function (r) { return r.tags.includes(tag) });
+      var tagMatches = allOptions.filter(function (r) { return r.tags.includes(tag) });
       ret = ret.concat(tagMatches);
     });
     return ret;
