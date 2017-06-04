@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Project } from './project';
 import { Option } from './option';
+import { CustomOption } from './option';
 import { OptionType } from './option';
 import { DataService } from './data.service';
 import { OnInit } from '@angular/core';
@@ -10,14 +11,18 @@ import { OnInit } from '@angular/core';
   templateUrl: './letter-builder.component.html',
   providers: [DataService]
 })
+
 export class LetterBuilderComponent {
   constructor(private dataService: DataService) { }
 
   title = 'AHV Letter Builder';
   project: Project
   relationships: Option[]
+  customRelationship: string
   supportReasons: Option[]
+  customSupportReasons: CustomOption[]
   improvements: Option[]
+  customImprovements: CustomOption[]
   name: string;
   emailAddress: string;
   physicalAddress: string;
@@ -36,18 +41,70 @@ export class LetterBuilderComponent {
 
       this.relationships = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Relationship));
       this.supportReasons = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.SupportReason));
+      this.customSupportReasons = [];
       this.improvements = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Improvement));
+      this.customImprovements = [];
       this.dataLoaded = true;
     });
   }
 
   generateText(): void {
     this.letter = '';
+    this.addLine(this.getText('firstLine'));
+    this.addLineBreak();
+    this.addSentence(this.getText('openingSentence'));
+
     this.relationships.filter(function (r) { return r.appliesToUser; }).forEach(element => {
-      this.letter += this.dataService.getRandomTextBankEntry(element.id);
+      this.addSentence(this.getText(element.id));
     });
-    // todo: footer, etc.
-    this.letter += '\n' + this.name;
+    if(this.customRelationship != '')
+      this.addSentence(this.customRelationship);
+    this.addLineBreak();
+    this.addLineBreak();
+
+
+    this.supportReasons.filter(function (r) { return r.appliesToUser; }).forEach(element => {
+      this.addSentence(this.getText(element.id));
+    });
+    this.customSupportReasons.forEach( r => {
+      this.addSentence(r.text);
+    });
+    this.addLineBreak();
+    this.addLineBreak();
+
+    this.improvements.filter(function (r) { return r.appliesToUser; }).forEach(element => {
+      this.addSentence(this.getText(element.id));
+    });
+    this.customImprovements.forEach( r => {
+      this.addSentence(r.text);
+    });
+    this.addLineBreak();
+    this.addLineBreak();
+
+    this.addLine(this.getText('valediction'));
+    this.addLine(this.name);
+    if(this.physicalAddress != '')
+      this.addLine(this.physicalAddress);
+  }
+
+  addLineBreak(): void{
+    this.addLine('');
+  }
+
+  addLine(text: string): void {
+    this.letter += this.replaceTokens(text) + '\n';
+  }
+
+  addSentence(text: string): void{
+    this.letter += this.replaceTokens(text) + ' ';
+  }
+
+  replaceTokens(text: string): string{
+    return text.replace('[projectName]', this.project.name);
+  }
+
+  getText(id: string): string{
+    return this.dataService.getRandomTextBankEntry(id);
   }
 
   getApplicableOptionsForProject(project: Project, allOptions: Option[]): Option[] {
@@ -71,5 +128,15 @@ export class LetterBuilderComponent {
     }
 
     return params;
+  }
+
+  addCustomSupportReason(): void
+  {
+    this.customSupportReasons.push(new CustomOption());
+  }
+
+  addCustomImprovement(): void
+  {
+    this.customImprovements.push(new CustomOption());
   }
 }

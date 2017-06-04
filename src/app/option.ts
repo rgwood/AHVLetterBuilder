@@ -12,3 +12,9 @@ export class Option {
   tags: string[];
   appliesToUser: boolean;
 }
+
+//this feels really unnecessary but for some reason Angular blows  up if I bind forms to strings instead of string properties...
+export class CustomOption
+{
+  public text: string;
+}
