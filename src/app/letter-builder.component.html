@@ -4,7 +4,7 @@
       <div class='col-xs-8'>
         <h1>{{project.name}}</h1>
         <markdown-to-html>{{project.description}}</markdown-to-html>
-        <form (ngSubmit)="generateText()" #letterForm="ngForm">
+        <form #letterForm="ngForm">
           <div class="panel panel-primary">
             <div class="panel-heading">
               <h3 class="panel-title">Your Information</h3>
@@ -47,8 +47,8 @@
               <h3 class="panel-title">Why do you support this project? (choose all that apply)</h3>
             </div>
             <div class="panel-body">
-              <div class="form-check" *ngFor="let reason of supportReasons" >
-                <label class="form-check-label"><input type="checkbox" name="support"  class="form-check-input"[(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+              <div class="form-check" *ngFor="let reason of supportReasons; let i = index;" >
+                <label class="form-check-label"><input type="checkbox" name="support{{i}}"  class="form-check-input"[(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
               </div>
               <div *ngFor="let customSupportReason of customSupportReasons; let i = index;" class="form-group">
                 <label>Custom reason {{i + 1}}</label>
@@ -63,8 +63,8 @@
               <h3 class="panel-title">What do you think could be improved?</h3>
             </div>
             <div class="panel-body">
-              <div class="form-check" *ngFor="let reason of improvements">
-                <label class="form-check-label"><input type="checkbox" name="improve"  class="form-check-input"[(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+              <div class="form-check" *ngFor="let reason of improvements; let i = index;">
+                <label class="form-check-label"><input type="checkbox" name="improve{{i}}"  class="form-check-input"[(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
               </div>
               <div *ngFor="let customImprovement of customImprovements; let i = index;" class="form-group">
                 <label>Custom suggestion {{i + 1}}</label>
@@ -75,24 +75,49 @@
           </div>
 
           <div class="form-group">
-            <button type="submit" class="btn btn-primary" [disabled]="!letterForm.form.valid">Generate Letter</button>
+            <button type="submit" (click)="warnAboutOverwrite() ? overwriteWarning.show() : generateText()" class="btn btn-primary" [disabled]="!letterForm.form.valid">Generate Letter</button>
           </div>
 
           <div class="form-group">
-            <label>Generated subject line</label>
+            <label>Letter subject</label>
             <input type="text" class="form-control" [(ngModel)]="letterSubject" name="letterSubject" placeholder="TBD" rows="16"/>
           </div>
 
           <div class="form-group">
-            <label>Generated letter</label>
+            <label>Letter body</label>
             <textarea class="form-control" [(ngModel)]="letterBody" name="letterBody" placeholder="Will be filled in when you click Generate Letter" rows="16"></textarea>
           </div>
 
           <div class="form-group">
-            <button (click)="sendLetter()" class="btn btn-primary" [disabled]="!readyToSendLetter()">Send Letter</button>
+            <button (click)="sendLetter();letterSent.show()" class="btn btn-primary" [disabled]="!readyToSendLetter()">Send Letter</button>
           </div>
-
         </form>
+
+        <app-modal #letterSent >
+          <div class="app-modal-header">
+            <strong>All Done</strong>
+          </div>
+          <div class="app-modal-body">
+            Your letter has been added to the review queue and will be sent to council shortly. Thank you so much!
+          </div>
+          <div class="app-modal-footer">
+            <button type="button" class="btn btn-primary" (click)="letterSent.hide()">Close</button>
+          </div>
+        </app-modal>
+
+        <app-modal #overwriteWarning >
+          <div class="app-modal-header">
+            <strong>Warning</strong>
+          </div>
+          <div class="app-modal-body">
+            If you click Generate Letter it will overwrite the current letter text. Are you sure?
+          </div>
+          <div class="app-modal-footer">
+            <button type="button" class="btn btn-primary" (click)="overwriteWarning.hide()">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="generateText();overwriteWarning.hide()">Generate Letter</button>
+          </div>
+        </app-modal>
+
       </div>
     </div>
   </div>

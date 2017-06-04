@@ -6,6 +6,7 @@ import { OptionType } from './option';
 import { DataService } from './data.service';
 import { RandomHelper } from './random-helper';
 import { OnInit } from '@angular/core';
+import { ModalComponent } from './modal.component';
 
 @Component({
   selector: 'app-root',
@@ -15,8 +16,6 @@ import { OnInit } from '@angular/core';
 
 export class LetterBuilderComponent {
   constructor(private dataService: DataService) { }
-
-  title = 'AHV Letter Builder';
   project: Project
   relationships: Option[]
   customRelationship: string
@@ -24,11 +23,11 @@ export class LetterBuilderComponent {
   customSupportReasons: CustomOption[]
   improvements: Option[]
   customImprovements: CustomOption[]
-  name: string;
-  emailAddress: string;
-  physicalAddress: string;
-  letterSubject: string
-  letterBody: string;
+  name: string = '';
+  emailAddress: string ='';
+  physicalAddress: string = '';
+  letterSubject: string = '';
+  letterBody: string = '';
   dataLoaded: boolean = false;
 
   ngOnInit(): void {
@@ -46,53 +45,80 @@ export class LetterBuilderComponent {
       this.improvements = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Improvement));
       this.customImprovements = [];
       this.dataLoaded = true;
+      //this.populateTestData();
     });
   }
 
+  //make testing easier by prepopulating most fields with (nonsense) data
+  populateTestData(): void {
+    this.name = "Test McTesterson";
+    this.emailAddress = "test@test.com"
+    this.physicalAddress = "4567 Fake Street, Vancouver. V5T 0A1"
+    for(let i = 0; i < 1; i++){
+      this.relationships[RandomHelper.RandomIntInclusive(0,this.relationships.length - 1)].appliesToUser = true;
+    }
+    this.customRelationship = "I also have a very custom relationship to this project.";
+
+    for(let i = 0; i < 2; i++){
+      this.supportReasons[RandomHelper.RandomIntInclusive(0,this.supportReasons.length - 1)].appliesToUser = true;
+    }
+    //this.customSupportReasons.push(new CustomOption('This project is good for custom reasons.'));
+
+    for(let i = 0; i < 2; i++){
+      this.improvements[RandomHelper.RandomIntInclusive(0,this.improvements.length - 1)].appliesToUser = true;
+    }
+    //this.customImprovements.push(new CustomOption("I'd like to see some custom cool things in the building."));
+  }
+
   generateText(): void {
-    //todo: warn if we would overwrite existing text
     let bullet = this.dataService.getRandomBulletPoint();
 
-    this.letterSubject = this.getText('emailSubject');
+    this.letterSubject = this.getTextFromBank('emailSubject');
     this.letterBody = '';
-    this.addLine(this.getText('firstLine'));
+    this.addLine(this.getTextFromBank('firstLine'));
     this.addLineBreak();
-    this.addSentence(this.getText('openingSentence'));
+    this.addSentence(this.getTextFromBank('openingSentence'));
 
     this.relationships.filter(function (r) { return r.appliesToUser; }).forEach(element => {
-      this.addSentence(this.getText(element.id));
+      this.addSentence(this.getTextFromBank(element.id));
     });
     if(this.customRelationship && this.customRelationship.trim() != '')
       this.addSentence(this.customRelationship);
     this.addLineBreak();
     this.addLineBreak();
 
-    this.addSentence(this.getText('supportReasonIntroStart'));
-    this.addLine(this.getText('supportReasonIntroEnd'));
-    this.supportReasons.filter(function (r) { return r.appliesToUser; }).forEach(element => {
-      this.addLineItem(bullet, this.getText(element.id));
-    });
-    this.customSupportReasons.forEach( r => {
-      this.addLineItem(bullet, r.text);
-    });
-    this.addLineBreak();
-
-    this.addLine(this.getText('improvementIntro'));
-    this.improvements.filter(function (r) { return r.appliesToUser; }).forEach(element => {
-      this.addLineItem(bullet, this.getText(element.id));
-    });
-    this.customImprovements.forEach( r => {
-      this.addLineItem(bullet, r.text);
-    });
-    this.addLineBreak();
-
-    //don't always (ever?) need a closer...
-    if(RandomHelper.FlipACoin()){
-      this.addLine(this.getText('closer'));
+    let applicableStandardSupportReasons = this.supportReasons.filter(function (r) { return r.appliesToUser; });
+    if(applicableStandardSupportReasons.length > 0 || this.customSupportReasons.length > 0){
+      this.addSentence(this.getTextFromBank('supportReasonIntroStart'));
+      this.addLine(this.getTextFromBank('supportReasonIntroEnd'));
+      applicableStandardSupportReasons.forEach(element => {
+        this.addLineItem(bullet, this.getTextFromBank(element.id));
+      });
+      this.customSupportReasons.forEach( r => {
+        this.addLineItem(bullet, r.text);
+      });
       this.addLineBreak();
     }
 
-    this.addLine(this.getText('valediction'));
+    let applicableImprovementSuggestions = this.improvements.filter(function (r) { return r.appliesToUser; });
+    if(applicableImprovementSuggestions.length > 0 || this.customImprovements.length > 0){
+      this.addLine(this.getTextFromBank('improvementIntro'));
+      applicableImprovementSuggestions.forEach(element => {
+        this.addLineItem(bullet, this.getTextFromBank(element.id));
+      });
+      this.customImprovements.forEach( r => {
+        this.addLineItem(bullet, r.text);
+      });
+      this.addLineBreak();
+    }
+
+    //don't always (ever?) need a closer...
+    if(RandomHelper.FlipACoin()){
+      this.addLine(this.getTextFromBank('closer'));
+      this.addLineBreak();
+    }
+
+    this.addLine(this.getTextFromBank('valediction'));
     this.addText(this.name);
     if(this.physicalAddress && this.physicalAddress.trim() != '')
       this.addSentence('\n' + this.physicalAddress);
@@ -103,15 +129,15 @@ export class LetterBuilderComponent {
   }
 
   addLine(text: string): void {
-    this.letterBody += this.replaceTokens(text) + '\n';
+    this.letterBody += text + '\n';
   }
 
   addLineItem(bullet:string, text: string): void {
-    this.letterBody += bullet + ' ' + this.replaceTokens(text) + '\n';
+    this.letterBody += bullet + ' ' + text + '\n';
   }
 
   addSentence(text: string): void{
-    this.letterBody += this.replaceTokens(text) + ' ';
+    this.letterBody += text + ' ';
   }
 
   addText(text: string): void{
@@ -122,8 +148,8 @@ export class LetterBuilderComponent {
     return text.replace('[projectName]', this.project.name);
   }
 
-  getText(id: string): string{
-    return this.dataService.getRandomTextBankEntry(id);
+  getTextFromBank(id: string): string{
+    return this.replaceTokens(this.dataService.getRandomTextBankEntry(id));
   }
 
   getApplicableOptionsForProject(project: Project, allOptions: Option[]): Option[] {
@@ -151,12 +177,17 @@ export class LetterBuilderComponent {
 
   addCustomSupportReason(): void
   {
-    this.customSupportReasons.push(new CustomOption());
+    this.customSupportReasons.push(new CustomOption(''));
   }
 
   addCustomImprovement(): void
   {
-    this.customImprovements.push(new CustomOption());
+    this.customImprovements.push(new CustomOption(''));
+  }
+
+  //is there text that might be overwritten if the user generates a new letter? 
+  warnAboutOverwrite(): boolean{
+    return this.letterBody.trim() != '';
   }
 
   readyToSendLetter(): boolean{
@@ -167,7 +198,6 @@ export class LetterBuilderComponent {
   }
 
   sendLetter(): void{
-    //todo implement
     console.log('send letter not available yet...')
   }
 }

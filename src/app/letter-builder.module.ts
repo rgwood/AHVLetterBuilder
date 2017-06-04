@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 import { LetterBuilderComponent } from './letter-builder.component';
 import { MarkdownToHtmlModule } from 'ng2-markdown-to-html';
+import {ModalComponent} from './modal.component';
 
 const appRoutes: Routes = [
   { path: 'project/:id',      component: LetterBuilderComponent }
@@ -12,7 +13,8 @@ const appRoutes: Routes = [
 
 @NgModule({
   declarations: [
-    LetterBuilderComponent
+    LetterBuilderComponent,
+    ModalComponent
   ],
   imports: [
     BrowserModule,
