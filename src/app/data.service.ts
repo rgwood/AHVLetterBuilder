@@ -23,13 +23,13 @@ export class DataService {
     //todo: don't hardcode key? Ahh who cares
     Tabletop.init( { key: '1kIkLMFe6VG8Fgpy0bLgLdelFzXppda0yl4jdKo9WICM',
                    callback: (data, tabletop) => {
-                     this.handleProjectData(data, tabletop, this.projectCache, this.optionCache, this.textBankCache);
+                     this.parseSpreadsheetData(data, tabletop, this.projectCache, this.optionCache, this.textBankCache);
                      callback();
                    } } );
   }
 
   //the cache parameters are dumb and shouldn't be necessary. For some reason I just couldn't get "this" to bind correctly in this method.
-  handleProjectData = (data: any, tabletop: any, 
+  parseSpreadsheetData = (data: any, tabletop: any, 
     projectCache: Project[], optionCache: Option[], textBankCache: {[id: string] : string[]}) => 
   {
     console.log('got data from tabletop');
@@ -82,19 +82,10 @@ export class DataService {
     return this.optionCache.filter(function(o){return o.type === type});
   }
   getRandomTextBankEntry(id: string): string {
-    let sentences = this.getTextBank()[id];
+    let sentences = this.textBankCache[id];
     return sentences[this.getRandomIntInclusive(0, sentences.length -1)];
   }
 
-//todo: this is terrible, store the data somewhere better and maybe memoize it
-  getTextBank(): {[id: string] : string[]} {
-    return this.textBankCache;
-    /*
-    let map: { [id: string]: string[]; } = { };
-    map["wantLiveNearby"] = ["I want to live nearby.","Lemme live nearby","Cmon, let me live nearby"];
-    return map;
-    */
-  }
   getRandomIntInclusive(min, max): number {
   min = Math.ceil(min);
   max = Math.floor(max);

@@ -43,14 +43,11 @@ export class LetterBuilderComponent {
 
   generateText(): void {
     this.letter = '';
-    let textBank = this.dataService.getTextBank();
     this.relationships.filter(function (r) { return r.appliesToUser; }).forEach(element => {
-      if(textBank[element.id])
-      {
-        this.letter += this.dataService.getRandomTextBankEntry(element.id);
-      }
-      // todo: footer, etc.
+      this.letter += this.dataService.getRandomTextBankEntry(element.id);
     });
+    // todo: footer, etc.
+    this.letter += '\n' + this.name;
   }
 
   getApplicableOptionsForProject(project: Project, allOptions: Option[]): Option[] {

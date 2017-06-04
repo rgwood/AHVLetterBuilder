@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 import { LetterBuilderComponent } from './letter-builder.component';
+import { MarkdownToHtmlModule } from 'ng2-markdown-to-html';
 
 const appRoutes: Routes = [
   { path: 'project/:id',      component: LetterBuilderComponent }
@@ -17,7 +18,8 @@ const appRoutes: Routes = [
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    MarkdownToHtmlModule.forRoot(),
   ],
   providers: [],
   bootstrap: [LetterBuilderComponent]
