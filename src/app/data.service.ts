@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Project } from './project';
 import { Option } from './option';
 import { OptionType } from './option';
+import { RandomHelper } from './random-helper';
 import { OnInit } from '@angular/core';
 import * as Tabletop from 'tabletop';
 
@@ -68,6 +69,7 @@ export class DataService {
       else
         textBankCache[id] = [text];
     });
+    console.log('data from tabletop was successfully parsed and cached');
   }
 
   getProject(id: string): Project {
@@ -83,13 +85,12 @@ export class DataService {
   }
   getRandomTextBankEntry(id: string): string {
     let sentences = this.textBankCache[id];
-    return sentences[this.getRandomIntInclusive(0, sentences.length -1)];
+    return RandomHelper.RandomString(sentences);
   }
-
-  getRandomIntInclusive(min, max): number {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  
+    getRandomBulletPoint(): string{
+    var options = ['-','•'];
+    return RandomHelper.RandomString(options);
   }
 
 }
