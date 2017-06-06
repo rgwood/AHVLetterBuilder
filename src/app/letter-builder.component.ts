@@ -35,7 +35,7 @@ export class LetterBuilderComponent {
       var projectId = this.getQueryParams(location.search)['p'];
       var proj = this.dataService.getProject(projectId);
       if(proj == null)
-        this.project = new Project('404', '404', '404','Project not found',[]);
+        this.project = new Project('404', '404', 'nobody@nowhere.com', '404','Project not found',[]);
       else
         this.project = this.dataService.getProject(projectId);
 
