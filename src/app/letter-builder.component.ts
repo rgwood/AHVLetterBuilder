@@ -35,7 +35,7 @@ export class LetterBuilderComponent {
       var projectId = this.getQueryParams(location.search)['p'];
       var proj = this.dataService.getProject(projectId);
       if(proj == null)
-        this.project = new Project('404', '404','Project not found',[]);
+        this.project = new Project('404', '404', '404','Project not found',[]);
       else
         this.project = this.dataService.getProject(projectId);
 
@@ -45,7 +45,8 @@ export class LetterBuilderComponent {
       this.improvements = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Improvement));
       this.customImprovements = [];
       this.dataLoaded = true;
-      //this.populateTestData();
+      if(this.getQueryParams(location.search)['test'] == 'true')
+        this.populateTestData();
     });
   }
 
@@ -57,17 +58,17 @@ export class LetterBuilderComponent {
     for(let i = 0; i < 1; i++){
       this.relationships[RandomHelper.RandomIntInclusive(0,this.relationships.length - 1)].appliesToUser = true;
     }
-    this.customRelationship = "I also have a very custom relationship to this project.";
+    //this.customRelationship = "I also have a very custom relationship to this project.";
 
     for(let i = 0; i < 2; i++){
       this.supportReasons[RandomHelper.RandomIntInclusive(0,this.supportReasons.length - 1)].appliesToUser = true;
     }
-    //this.customSupportReasons.push(new CustomOption('This project is good for custom reasons.'));
+    //this.customSupportReasons.push(new CustomOption('This project is good for custom reasons'));
 
     for(let i = 0; i < 2; i++){
       this.improvements[RandomHelper.RandomIntInclusive(0,this.improvements.length - 1)].appliesToUser = true;
     }
-    //this.customImprovements.push(new CustomOption("I'd like to see some custom cool things in the building."));
+    //this.customImprovements.push(new CustomOption("I'd like to see some custom cool things in the building"));
   }
 
   generateText(): void {
@@ -145,7 +146,8 @@ export class LetterBuilderComponent {
   }
 
   replaceTokens(text: string): string{
-    return text.replace('[projectName]', this.project.name);
+    return text.replace('[projectName]', this.project.name)
+               .replace('[neighbourhoodName]',this.project.neighbourhood);
   }
 
   getTextFromBank(id: string): string{
