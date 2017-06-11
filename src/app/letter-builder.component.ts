@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Http } from '@angular/http';
 import { Project } from './project';
 import { Option } from './option';
 import { CustomOption } from './option';
@@ -15,7 +16,7 @@ import { ModalComponent } from './modal.component';
 })
 
 export class LetterBuilderComponent {
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService, private http: Http) { }
   project: Project
   relationships: Option[]
   customRelationship: string
@@ -199,7 +200,18 @@ export class LetterBuilderComponent {
       return false;
   }
 
-  sendLetter(): void{
-    console.log('send letter not available yet...')
+  sendLetter(): void{  
+    console.log('Posting letter')
+    let url = "https://8zp8hsoa63.execute-api.us-west-2.amazonaws.com/prod/submit";
+    let data = {};
+    data['name'] = this.name;
+    data['email'] = this.emailAddress;
+    data['subject'] = this.letterSubject;
+    data['content'] = this.letterBody;
+    this.http.post(url, data)
+    .map(response => response.json())
+    .subscribe( () => {},
+      err => {console.log('Error when posting'); console.log(err)},
+      () => console.log('Post complete'));
   }
 }
