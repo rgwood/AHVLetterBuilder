@@ -33,7 +33,7 @@
             </div>
             <div class="panel-body">
               <div class="form-check" *ngFor="let reason of relationships; let i = index">
-                <label class="form-check-label"><input type="checkbox" name="relationship{{i}}"  class="form-check-input"[(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+                <label class="form-check-label"><input type="checkbox" style="margin:5px;" name="relationship{{i}}"  class="form-check-input"[(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
               </div>
               <div class="form-group">
                 <label>Other relationship (use full sentences)</label>
@@ -48,7 +48,7 @@
             </div>
             <div class="panel-body">
               <div class="form-check" *ngFor="let reason of supportReasons; let i = index;" >
-                <label class="form-check-label"><input type="checkbox" name="support{{i}}"  class="form-check-input"[(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+                <label class="form-check-label"><input type="checkbox" style="margin:5px;" name="support{{i}}"  class="form-check-input"[(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
               </div>
               <div *ngFor="let customSupportReason of customSupportReasons; let i = index;" class="form-group">
                 <label>Custom reason {{i + 1}}</label>
@@ -64,7 +64,7 @@
             </div>
             <div class="panel-body">
               <div class="form-check" *ngFor="let reason of improvements; let i = index;">
-                <label class="form-check-label"><input type="checkbox" name="improve{{i}}"  class="form-check-input"[(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+                <label class="form-check-label"><input type="checkbox" style="margin:5px;" name="improve{{i}}"  class="form-check-input"[(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
               </div>
               <div *ngFor="let customImprovement of customImprovements; let i = index;" class="form-group">
                 <label>Custom suggestion {{i + 1}}</label>
