@@ -32,6 +32,7 @@ export class LetterBuilderComponent {
   dataLoaded: boolean = false;
   sendLetterButtonText: string = 'Send Letter';
   letterSent: boolean = false;
+  demoMode: boolean = false;
 
   ngOnInit(): void {
     this.dataService.init(() => {
@@ -48,8 +49,11 @@ export class LetterBuilderComponent {
       this.improvements = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Improvement));
       this.customImprovements = [];
       this.dataLoaded = true;
-      if(this.getQueryParams(location.search)['test'] == 'true')
+      var queryParams = this.getQueryParams(location.search);
+      if(queryParams['test'] == 'true')
         this.populateTestData();
+      if(queryParams['demo'] == 'true')
+        this.demoMode = true;  
     });
   }
 
@@ -167,7 +171,7 @@ export class LetterBuilderComponent {
   }
 
   getQueryParams(qs: string) : {} {
-    //polyfill for IE
+    // polyfill for IE
     // https://tc39.github.io/ecma262/#sec-array.prototype.includes
     if (!Array.prototype.includes) {
       Object.defineProperty(Array.prototype, 'includes', {
@@ -213,7 +217,7 @@ export class LetterBuilderComponent {
             }
             k++;
           }
-    
+  
           // 8. Return false
           return false;
         }
@@ -255,20 +259,25 @@ export class LetterBuilderComponent {
       return false;
   }
 
-  sendLetter(): void{
-    console.log('Posting letter')
-    let url = "https://8zp8hsoa63.execute-api.us-west-2.amazonaws.com/prod/submit";
-    let data = {};
-    data['name'] = this.name;
-    data['email'] = this.emailAddress;
-    data['subject'] = this.letterSubject;
-    data['content'] = this.letterBody;
-    this.http.post(url, data)
-    .map(response => response.json())
-    .subscribe( () => {},
-      err => {console.log('Error when posting'); console.log(err)},
-      () => console.log('Post complete'));
-      this.letterSent = true;
-      this.sendLetterButtonText = "Letter sent";
+  sendLetter(): void {
+    if (this.demoMode) {
+      console.log('Demo mode, not sending letter')
+    }
+    else {
+      console.log('Posting letter')
+      let url = "https://8zp8hsoa63.execute-api.us-west-2.amazonaws.com/prod/submit";
+      let data = {};
+      data['name'] = this.name;
+      data['email'] = this.emailAddress;
+      data['subject'] = this.letterSubject;
+      data['content'] = this.letterBody;
+      this.http.post(url, data)
+      .map(response => response.json())
+      .subscribe( () => {},
+        err => {console.log('Error when posting'); console.log(err)},
+        () => console.log('Post complete'));
+    }
+    this.letterSent = true;
+    this.sendLetterButtonText = "Letter sent";
   }
 }
