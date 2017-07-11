@@ -98,7 +98,7 @@
           </div>
 
           <div class="form-group">
-            <button (click)="sendLetter();letterSent.show()" class="btn btn-primary" [disabled]="!readyToSendLetter()">Send Letter</button>
+            <button (click)="sendLetter();letterSent.show()" class="btn btn-primary" [disabled]="!readyToSendLetter()">{{sendLetterButtonText}}</button>
           </div>
         </form>
 
