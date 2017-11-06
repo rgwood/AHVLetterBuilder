@@ -22,7 +22,7 @@ export class DataService {
   init(callback: ()=> void)
   {
     //todo: don't hardcode key? Ahh who cares
-    Tabletop.init( { key: '1kIkLMFe6VG8Fgpy0bLgLdelFzXppda0yl4jdKo9WICM',
+    Tabletop.init( { key: '1ZFKYPIx8JlfGg1dHJvSwq6xSOuQRM34cXSRZjH-AeuM',
                    callback: (data, tabletop) => {
                      this.parseSpreadsheetData(data, tabletop, this.projectCache, this.optionCache, this.textBankCache);
                      callback();

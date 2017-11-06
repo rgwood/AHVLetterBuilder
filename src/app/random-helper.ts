@@ -15,6 +15,6 @@ export class RandomHelper {
 	}
 
 	static RandomString(array: string[]): string{
-		return array[this.RandomIntInclusive(0,array.length - 1)];
+		return array[Math.floor(Math.random()*array.length)];
 	}
 }
