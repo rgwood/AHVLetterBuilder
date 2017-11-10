@@ -12,6 +12,7 @@ import { ModalComponent } from './modal.component';
 @Component({
   selector: 'app-root',
   templateUrl: './letter-builder.component.html',
+  styleUrls: ['./letter-builder.component.css'],
   providers: [DataService]
 })
 
@@ -29,10 +30,15 @@ export class LetterBuilderComponent {
   physicalAddress: string = '';
   letterSubject: string = '';
   letterBody: string = '';
+  joinMailingList: boolean = false;
   dataLoaded: boolean = false;
-  sendLetterButtonText: string = 'Send Letter';
   letterSent: boolean = false;
   demoMode: boolean = false;
+
+  //text for display
+  sendLetterButtonText: string = 'Send Letter';
+  messageSentModalDialogHeader: string = '';
+  messageSentModalDialogBody: string = '';
 
   ngOnInit(): void {
     this.dataService.init(() => {
@@ -65,17 +71,14 @@ export class LetterBuilderComponent {
     for(let i = 0; i < 1; i++){
       this.relationships[RandomHelper.RandomIntInclusive(0,this.relationships.length - 1)].appliesToUser = true;
     }
-    //this.customRelationship = "I also have a very custom relationship to this project.";
 
     for(let i = 0; i < 2; i++){
       this.supportReasons[RandomHelper.RandomIntInclusive(0,this.supportReasons.length - 1)].appliesToUser = true;
     }
-    //this.customSupportReasons.push(new CustomOption('This project is good for custom reasons'));
 
     for(let i = 0; i < 2; i++){
       this.improvements[RandomHelper.RandomIntInclusive(0,this.improvements.length - 1)].appliesToUser = true;
     }
-    //this.customImprovements.push(new CustomOption("I'd like to see some custom cool things in the building"));
   }
 
   generateText(): void {
@@ -262,22 +265,41 @@ export class LetterBuilderComponent {
   sendLetter(): void {
     if (this.demoMode) {
       console.log('Demo mode, not sending letter')
+      this.sendLetterSucceeded();
     }
     else {
+      this.messageSentModalDialogHeader = 'Sending...';
       console.log('Posting letter')
+      //todo: move this into config
       let url = "https://8zp8hsoa63.execute-api.us-west-2.amazonaws.com/prod/submit";
       let data = {};
       data['name'] = this.name;
       data['email'] = this.emailAddress;
       data['subject'] = this.letterSubject;
       data['content'] = this.letterBody;
+      //data['join'] = this.joinMailingList;
       this.http.post(url, data)
       .map(response => response.json())
       .subscribe( () => {},
-        err => {console.log('Error when posting'); console.log(err)},
-        () => console.log('Post complete'));
+        err => {console.log(err); this.sendLetterFailed();},
+        () => this.sendLetterSucceeded());
     }
+    
+  }
+
+  sendLetterSucceeded(): void {
+    console.log('Post complete');
     this.letterSent = true;
     this.sendLetterButtonText = "Letter sent";
+    this.messageSentModalDialogHeader = 'All Done';
+    this.messageSentModalDialogBody = 'Your letter has been added to the review queue and will be sent to council shortly. Thank you so much!';
   }
+
+  sendLetterFailed(): void {
+    console.log('Message failed to send');
+    this.messageSentModalDialogHeader = "Message failed to send";
+    this.messageSentModalDialogBody = "The message failed to send, sorry about that! Try again, and if it still doesn't work please let us know.";
+  }
+
+
 }
