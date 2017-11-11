@@ -273,7 +273,7 @@ export class LetterBuilderComponent {
     }
     else {
       console.log('Using prod submit URL')
-      url = "https://8zp8hsoa63.execute-api.us-west-2.amazonaws.com/prod/submit";
+      url = "https://1il25ibjdk.execute-api.us-west-2.amazonaws.com/prod/submit";
     }
     
     let data = {};
