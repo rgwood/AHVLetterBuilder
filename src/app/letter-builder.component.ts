@@ -263,28 +263,30 @@ export class LetterBuilderComponent {
   }
 
   sendLetter(): void {
+
+    this.messageSentModalDialogHeader = 'Sending...';
+    var url;
+    //todo: move these endpoints into config
     if (this.demoMode) {
-      console.log('Demo mode, not sending letter')
-      this.sendLetterSucceeded();
+      console.log('Using dev submit URL')
+      url = "https://rw7z8k8rol.execute-api.us-west-2.amazonaws.com/dev/submit";
     }
     else {
-      this.messageSentModalDialogHeader = 'Sending...';
-      console.log('Posting letter')
-      //todo: move this into config
-      let url = "https://8zp8hsoa63.execute-api.us-west-2.amazonaws.com/prod/submit";
-      let data = {};
-      data['name'] = this.name;
-      data['email'] = this.emailAddress;
-      data['subject'] = this.letterSubject;
-      data['content'] = this.letterBody;
-      //data['join'] = this.joinMailingList;
-      this.http.post(url, data)
-      .map(response => response.json())
-      .subscribe( () => {},
-        err => {console.log(err); this.sendLetterFailed();},
-        () => this.sendLetterSucceeded());
+      console.log('Using prod submit URL')
+      url = "https://8zp8hsoa63.execute-api.us-west-2.amazonaws.com/prod/submit";
     }
     
+    let data = {};
+    data['name'] = this.name;
+    data['email'] = this.emailAddress;
+    data['subject'] = this.letterSubject;
+    data['content'] = this.letterBody;
+    data['join'] = this.joinMailingList;
+    this.http.post(url, data)
+    .map(response => response.json())
+    .subscribe( () => {},
+      err => {console.log(err); this.sendLetterFailed();},
+      () => this.sendLetterSucceeded());
   }
 
   sendLetterSucceeded(): void {
@@ -300,6 +302,4 @@ export class LetterBuilderComponent {
     this.messageSentModalDialogHeader = "Message failed to send";
     this.messageSentModalDialogBody = "The message failed to send, sorry about that! Try again, and if it still doesn't work please let us know.";
   }
-
-
 }

@@ -97,11 +97,11 @@
             <textarea class="form-control" [(ngModel)]="letterBody" name="letterBody" placeholder="Will be filled in when you click Generate Letter" rows="16"></textarea>
           </div>
 
-          <!-- <div class="form-group">
+          <div class="form-group">
               <label class="form-check-label">
                 <input type="checkbox" name="join" [(ngModel)]="joinMailingList"  class="form-check-input"/>Join the Abundant Housing Vancouver mailing list
               </label>
-          </div> -->
+          </div> 
 
           <div class="form-group">
             <button (click)="sendLetter();letterSent.show()" class="btn btn-primary" [disabled]="!readyToSendLetter()">{{sendLetterButtonText}}</button>
