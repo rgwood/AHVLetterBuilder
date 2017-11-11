@@ -1,6 +1,7 @@
 export enum OptionType 
 { 
 	Relationship, //someone's relationship to the project
+        Recommendation,
 	SupportReason, //reason they support it
 	Improvement //suggestions for improvement
 }

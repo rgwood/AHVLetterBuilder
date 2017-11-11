@@ -20,6 +20,7 @@ export class LetterBuilderComponent {
   project: Project
   relationships: Option[]
   customRelationship: string
+  recommendations: Option[]
   supportReasons: Option[]
   customSupportReasons: CustomOption[]
   improvements: Option[]
@@ -39,12 +40,13 @@ export class LetterBuilderComponent {
       var projectId = this.getQueryParams(location.search)['p'];
       var proj = this.dataService.getProject(projectId);
       if(proj == null)
-        this.project = new Project('404', '404', 'nobody@nowhere.com', '404','Project not found',[]);
-      else
-        this.project = this.dataService.getProject(projectId);
+        projectId = '1';
+
+      this.project = this.dataService.getProject(projectId);
 
       this.relationships = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Relationship));
       this.supportReasons = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.SupportReason));
+      this.recommendations = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Recommendation));
       this.customSupportReasons = [];
       this.improvements = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Improvement));
       this.customImprovements = [];
@@ -94,6 +96,21 @@ export class LetterBuilderComponent {
       this.addSentence(this.customRelationship);
     this.addLineBreak();
     this.addLineBreak();
+
+    let applicableStandardRecommendations = this.recommendations.filter(function (r) { return r.appliesToUser; });
+    if (applicableStandardRecommendations.length > 0) {
+      if (applicableStandardRecommendations.length == 1) {
+        this.addLine(this.getTextFromBank('recommendationIntroSingle'));
+      }
+      else
+      {
+        this.addLine(this.getTextFromBank('recommendationIntroMultiple'));
+      }
+      applicableStandardRecommendations.forEach(r => {
+        this.addLineItem(bullet, this.getTextFromBank(r.id));
+      });
+      this.addLineBreak();
+    }
 
     let applicableStandardSupportReasons = this.supportReasons.filter(function (r) { return r.appliesToUser; });
     if(applicableStandardSupportReasons.length > 0 || this.customSupportReasons.length > 0){
