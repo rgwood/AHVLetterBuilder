@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-//from this awesome Stack Overflow comment: https://stackoverflow.com/a/40144809
+// from this awesome Stack Overflow comment: https://stackoverflow.com/a/40144809
 @Component({
   selector: 'app-modal',
   template: `
