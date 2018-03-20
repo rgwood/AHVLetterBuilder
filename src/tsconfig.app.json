@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "module": "es2015",
-    "baseUrl": "https://canspice.org/mayday/",
+    "baseUrl": "https://canspice.org/yinw-letter/",
     "types": []
   },
   "exclude": [

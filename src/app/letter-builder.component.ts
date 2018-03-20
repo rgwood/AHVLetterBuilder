@@ -16,17 +16,17 @@ import { ModalComponent } from './modal.component';
 })
 
 export class LetterBuilderComponent {
-  constructor(private dataService: DataService, private http: Http) { }
-  project: Project
-  relationships: Option[]
-  customRelationship: string
-  recommendations: Option[]
-  supportReasons: Option[]
-  customSupportReasons: CustomOption[]
-  improvements: Option[]
-  customImprovements: CustomOption[]
+  projectId: string = '';
+  project: Project;
+  relationships: Option[];
+  customRelationship: string;
+  recommendations: Option[];
+  supportReasons: Option[];
+  customSupportReasons: CustomOption[];
+  improvements: Option[];
+  customImprovements: CustomOption[];
   name: string = '';
-  emailAddress: string ='';
+  emailAddress: string = '';
   physicalAddress: string = '';
   letterSubject: string = '';
   letterBody: string = '';
@@ -34,32 +34,40 @@ export class LetterBuilderComponent {
   sendLetterButtonText: string = 'Send Letter';
   letterSent: boolean = false;
   demoMode: boolean = false;
+  projectNotFound: boolean = false;
+
+  constructor(private dataService: DataService, private http: Http) { }
 
   ngOnInit(): void {
+
+    const defaultProjectId = '408-e-columbia';
+
     this.dataService.init(() => {
-      var projectId = this.getQueryParams(location.search)['p'];
-      var proj = this.dataService.getProject(projectId);
-      if(proj == null)
-        projectId = '1';
+      const projectId = this.getQueryParams(location.search)['p'];
+      this.projectId = projectId;
+      let proj = this.dataService.getProject(projectId);
+      if (proj == null) {
+        // try the default one.
+        proj = this.dataService.getProject(defaultProjectId);
+      }
+      if (proj == null) {
+        this.projectNotFound = true;
+      }
 
-      this.project = this.dataService.getProject(projectId);
-
-      this.relationships = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Relationship));
-      this.supportReasons = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.SupportReason));
-      this.recommendations = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Recommendation));
-      this.customSupportReasons = [];
-      this.improvements = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Improvement));
-      this.customImprovements = [];
+      if (!this.projectNotFound) {
+        this.project = proj;
+        this.relationships = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Relationship));
+        this.supportReasons = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.SupportReason));
+        this.recommendations = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Recommendation));
+        this.customSupportReasons = [];
+        this.improvements = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Improvement));
+        this.customImprovements = [];
+      }
       this.dataLoaded = true;
-      var queryParams = this.getQueryParams(location.search);
-      if(queryParams['test'] == 'true')
-        this.populateTestData();
-      if(queryParams['demo'] == 'true')
-        this.demoMode = true;  
-    });
+      });
   }
 
-  //make testing easier by prepopulating most fields with (nonsense) data
+  // make testing easier by prepopulating most fields with (nonsense) data
   populateTestData(): void {
     this.name = "Test McTesterson";
     this.emailAddress = "test@test.com"
@@ -171,7 +179,8 @@ export class LetterBuilderComponent {
 
   replaceTokens(text: string): string{
     return text.replace('[projectName]', this.project.name)
-               .replace('[neighbourhoodName]',this.project.neighbourhood);
+               .replace('[address]', this.project.address)
+               .replace('[neighbourhoodName]', this.project.neighbourhood);
   }
 
   getTextFromBank(id: string): string{
@@ -282,7 +291,7 @@ export class LetterBuilderComponent {
     }
     else {
       console.log('Posting letter')
-      let url = "https://8zp8hsoa63.execute-api.us-west-2.amazonaws.com/prod/submit";
+      let url = "https://sx4728j8aa.execute-api.us-west-2.amazonaws.com/dev/submit";
       let data = {};
       data['name'] = this.name;
       data['email'] = this.emailAddress;

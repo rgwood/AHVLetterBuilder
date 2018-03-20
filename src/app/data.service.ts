@@ -22,7 +22,7 @@ export class DataService {
   init(callback: ()=> void)
   {
     //todo: don't hardcode key? Ahh who cares
-    Tabletop.init( { key: '1ZFKYPIx8JlfGg1dHJvSwq6xSOuQRM34cXSRZjH-AeuM',
+    Tabletop.init( { key: '1qHENcVnwTpmZpxgCXMdyQo_z7b56PTSMIU_ZYBMloGs',
                    callback: (data, tabletop) => {
                      this.parseSpreadsheetData(data, tabletop, this.projectCache, this.optionCache, this.textBankCache);
                      callback();
@@ -33,17 +33,17 @@ export class DataService {
   parseSpreadsheetData = (data: any, tabletop: any, 
     projectCache: Project[], optionCache: Option[], textBankCache: {[id: string] : string[]}) => 
   {
-    console.log('got data from tabletop');
     let projects = data['Projects'].all();
     projects.forEach(function(p){
       //todo: error handling
-      let id = p["ID"];
-      let name = p["Name"];
-      let emailAddress = p["Email to"];
-      let neighbourhood = p["Neighbourhood name"];
-      let description = p["Description"];
+      let id = p["ID"].replace(/(\r\n|\n|\r)/gm,"");
+      let name = p["Name"].replace(/(\r\n|\n|\r)/gm,"");
+      let emailAddress = p["Email to"].replace(/(\r\n|\n|\r)/gm,"");
+      let neighbourhood = p["Neighbourhood name"].replace(/(\r\n|\n|\r)/gm,"");
+      let description = p["Description"].replace(/(\r\n|\n|\r)/gm,"");
+      let address = p["Address"].replace(/(\r\n|\n|\r)/gm, '');
       let tags = (p["Tags"] as string).split(",");
-      let newProject = new Project(id, name, emailAddress, neighbourhood, description, tags);
+      let newProject = new Project(id, name, emailAddress, neighbourhood, description, address, tags);
       projectCache.push(newProject); 
     });
 
@@ -64,22 +64,25 @@ export class DataService {
 
     let textBank = data['Text Bank'].all();
     textBank.forEach(function(tb){
-      let id = tb['ID'] as string;
-      let text = tb['Text'] as string;
-      if(id in textBankCache)
+      const id = tb['ID'] as string;
+      const text = tb['Text'] as string;
+      if(id in textBankCache){
         textBankCache[id].push(text);
-      else
+      } else {
         textBankCache[id] = [text];
+      }
     });
-    console.log('data from tabletop was successfully parsed and cached');
   }
 
   getProject(id: string): Project {
-    let matches = this.projectCache.filter(function(p) { return p.id === id; });
-    if(matches.length == 0)
+    const matches = this.projectCache.filter((p) => {
+      return p.id === id;
+    });
+    if (matches.length === 0) {
       return null;
-    else
+    } else {
       return matches[0];
+    }
   }
 
   getOptions(type: OptionType): Option[]{
