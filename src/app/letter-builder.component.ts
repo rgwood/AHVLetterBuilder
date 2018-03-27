@@ -288,10 +288,11 @@ export class LetterBuilderComponent {
   sendLetter(): void {
     if (this.demoMode) {
       console.log('Demo mode, not sending letter')
-    }
-    else {
-      console.log('Posting letter')
-      let url = "https://sx4728j8aa.execute-api.us-west-2.amazonaws.com/dev/submit";
+    } else {
+      console.log('Posting letter');
+      let devUrl = 'https://sx4728j8aa.execute-api.us-west-2.amazonaws.com/dev/submit';
+      let prodUrl = 'https://lqpuutdeh1.execute-api.us-west-2.amazonaws.com/prod/submit';
+      let url = prodUrl;
       let data = {};
       data['name'] = this.name;
       data['email'] = this.emailAddress;
