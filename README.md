@@ -6,7 +6,7 @@ You can [try it out in demo mode](http://www.abundanthousingvancouver.com/letter
 
 Inspired by Melody Ma's [105 Keefer letter generator](https://github.com/savechinatownheritage/105keefer) (but written from scratch). Thanks, Melody!
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.6. You should probably (read: definitely) install Angular CLI before trying to work with this.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli). 
 
 ## How to run a test version
 
@@ -14,4 +14,4 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. To do a production build (smaller) without filename hashing (convenient b/c your script embed tags don't need to be updated): `ng build --target=production --output-hashing none`
+Run `npm run build-prod` to build the project for production. The build artifacts will be stored in the `dist/` directory.
