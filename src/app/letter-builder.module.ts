@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { LetterBuilderComponent } from './letter-builder.component';
 import { MarkdownToHtmlModule } from 'ng2-markdown-to-html';
 import { ModalComponent } from './modal.component';
@@ -14,7 +14,7 @@ import { ModalComponent } from './modal.component';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
+    HttpClientModule,
     MarkdownToHtmlModule.forRoot(),
   ],
   providers: [],

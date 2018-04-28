@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Project } from './project';
 import { Option } from './option';
 import { CustomOption } from './option';
@@ -39,7 +39,7 @@ export class LetterBuilderComponent {
   messageSentModalDialogHeader: string = '';
   messageSentModalDialogBody = '';
 
-  constructor(private dataService: DataService, private http: Http) { }
+  constructor(private dataService: DataService, private http: HttpClient) { }
 
 
 
@@ -292,7 +292,6 @@ export class LetterBuilderComponent {
     data['content'] = this.letterBody;
     data['join'] = this.joinMailingList;
     this.http.post(url, data)
-      .map(response => response.json())
       .subscribe(() => { },
       err => { console.log(err); this.sendLetterFailed(); },
       () => this.sendLetterSucceeded());
