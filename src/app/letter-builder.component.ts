@@ -278,7 +278,7 @@ export class LetterBuilderComponent {
     // todo: move these endpoints into config
     if (this.demoMode) {
       console.log('Using dev submit URL');
-      url = 'https://rw7z8k8rol.execute-api.us-west-2.amazonaws.com/dev/submit';
+      url = 'https://5qr7rb0wm2.execute-api.us-west-2.amazonaws.com/dev/submit';
     }
     else {
       console.log('Using prod submit URL');

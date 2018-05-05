@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LetterBuilderComponent } from './letter-builder.component';
-import { MarkdownToHtmlModule } from 'ng2-markdown-to-html';
+import { MarkdownModule } from 'ngx-markdown';
 import { ModalComponent } from './modal.component';
 
 @NgModule({
@@ -15,7 +15,7 @@ import { ModalComponent } from './modal.component';
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    MarkdownToHtmlModule.forRoot(),
+    MarkdownModule.forRoot(),
   ],
   providers: [],
   bootstrap: [LetterBuilderComponent]
