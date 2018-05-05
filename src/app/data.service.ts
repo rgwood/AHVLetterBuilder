@@ -4,6 +4,7 @@ import { Option } from './option';
 import { OptionType } from './option';
 import { RandomHelper } from './random-helper';
 import { OnInit } from '@angular/core';
+import { environment } from '../environments/environment';
 import * as Tabletop from 'tabletop';
 
 @Injectable()
@@ -20,8 +21,7 @@ export class DataService {
   }
 
   init(callback: () => void) {
-    // todo: don't hardcode key
-    Tabletop.init( { key: '1kIkLMFe6VG8Fgpy0bLgLdelFzXppda0yl4jdKo9WICM',
+    Tabletop.init( { key: environment.googleSpreadsheetKey,
                    callback: (data, tabletop) => {
                      this.parseSpreadsheetData(data, tabletop, this.projectCache, this.optionCache, this.textBankCache);
                      callback();

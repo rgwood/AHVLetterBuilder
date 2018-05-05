@@ -8,6 +8,7 @@ import { DataService } from './data.service';
 import { RandomHelper } from './random-helper';
 import { OnInit } from '@angular/core';
 import { ModalComponent } from './modal.component';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -40,8 +41,6 @@ export class LetterBuilderComponent {
   messageSentModalDialogBody = '';
 
   constructor(private dataService: DataService, private http: HttpClient) { }
-
-
 
   ngOnInit(): void {
     this.dataService.init(() => {
@@ -274,16 +273,7 @@ export class LetterBuilderComponent {
   sendLetter(): void {
 
     this.messageSentModalDialogHeader = 'Sending...';
-    let url;
-    // todo: move these endpoints into config
-    if (this.demoMode) {
-      console.log('Using dev submit URL');
-      url = 'https://5qr7rb0wm2.execute-api.us-west-2.amazonaws.com/dev/submit';
-    }
-    else {
-      console.log('Using prod submit URL');
-      url = 'https://1il25ibjdk.execute-api.us-west-2.amazonaws.com/prod/submit';
-    }
+    const url = environment.submitUrl;
 
     const data = {};
     data['name'] = this.name;
@@ -293,8 +283,8 @@ export class LetterBuilderComponent {
     data['join'] = this.joinMailingList;
     this.http.post(url, data)
       .subscribe(() => { },
-      err => { console.log(err); this.sendLetterFailed(); },
-      () => this.sendLetterSucceeded());
+        err => { console.log(err); this.sendLetterFailed(); },
+        () => this.sendLetterSucceeded());
   }
 
   sendLetterSucceeded(): void {

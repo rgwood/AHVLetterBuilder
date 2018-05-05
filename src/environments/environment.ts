@@ -4,5 +4,7 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  googleSpreadsheetKey: '1kIkLMFe6VG8Fgpy0bLgLdelFzXppda0yl4jdKo9WICM',
+  submitUrl: 'https://5qr7rb0wm2.execute-api.us-west-2.amazonaws.com/dev/submit'
 };
