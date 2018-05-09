@@ -37,10 +37,11 @@ export class DataService {
       // todo: error handling
       let id = p['ID'];
       let name = p['Name'];
-      let emailAddress = p['Email to'];
+      let emailAddress = p['Send Emails To'].split('\n').map(a => a.trim());
       let neighbourhood = p['Neighbourhood name'];
       let description = p['Description'];
       let tags = (p['Tags'] as string).split(',');
+
       const newProject = new Project(id, name, emailAddress, neighbourhood, description, tags);
       projectCache.push(newProject);
     });

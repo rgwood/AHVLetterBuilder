@@ -47,7 +47,7 @@ export class LetterBuilderComponent {
       const projectId = this.getQueryParams(location.search)['p'];
       const proj = this.dataService.getProject(projectId);
       if (proj == null) {
-        this.project = new Project('404', '404', 'nobody@nowhere.com', '404', 'Project not found', []);
+        this.project = new Project('404', '404', ['nobody@nowhere.com'], '404', 'Project not found', []);
       }
       else {
         this.project = this.dataService.getProject(projectId);
@@ -281,6 +281,7 @@ export class LetterBuilderComponent {
     data['subject'] = this.letterSubject;
     data['content'] = this.letterBody;
     data['join'] = this.joinMailingList;
+    data['recipients'] = this.project.emailToAddresses;
     this.http.post(url, data)
       .subscribe(() => { },
         err => { console.log(err); this.sendLetterFailed(); },
