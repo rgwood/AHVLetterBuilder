@@ -282,10 +282,15 @@ export class LetterBuilderComponent {
     data['content'] = this.letterBody;
     data['join'] = this.joinMailingList;
     data['recipients'] = this.project.emailToAddresses;
-    this.http.post(url, data)
+
+    if (this.demoMode) {
+      this.sendLetterSucceeded();
+    } else {
+      this.http.post(url, data)
       .subscribe(() => { },
         err => { console.log(err); this.sendLetterFailed(); },
         () => this.sendLetterSucceeded());
+    }
   }
 
   sendLetterSucceeded(): void {
