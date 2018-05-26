@@ -276,6 +276,7 @@ export class LetterBuilderComponent {
     const url = environment.submitUrl;
 
     const data = {};
+    data['projectId'] = this.project.id;
     data['name'] = this.name;
     data['email'] = this.emailAddress;
     data['subject'] = this.letterSubject;
