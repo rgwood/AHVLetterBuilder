@@ -12,17 +12,19 @@
             <div class="panel-body">
               <div class="form-group" [ngClass]="{'has-error': nameInput.invalid && nameInput.dirty}">
                 <label for="nameInput">Full Name (required)</label>
-                <input [(ngModel)]="name" #nameInput="ngModel" name="fullName" class="form-control"  placeholder="Jane Doe" required/>
+                <input [(ngModel)]="name" #nameInput="ngModel" name="fullName" class="form-control" placeholder="Jane Doe" required/>
                 <div [hidden]=" nameInput.valid || nameInput.pristine" class="alert alert-danger">Name is required</div>
               </div>
               <div class=form-group [ngClass]="{'has-error': emailInput.invalid && emailInput.dirty}">
                 <label for="emailAddressInput">Email Address (required)</label>
-                <input type="email" [(ngModel)]="emailAddress" #emailInput="ngModel" name="emailAddress" class="form-control"  id="emailAddressInput" placeholder="address@domain.com" required email/>
+                <input type="email" [(ngModel)]="emailAddress" #emailInput="ngModel" name="emailAddress" class="form-control" id="emailAddressInput"
+                  placeholder="address@domain.com" required email/>
                 <div [hidden]=" emailInput.valid || emailInput.pristine" class="alert alert-danger">Please enter a valid email address</div>
               </div>
               <div class=form-group>
                 <label for="physicalAddressInput">Address (optional)</label>
-                <input [(ngModel)]="physicalAddress" name="physicalAddress" class="form-control"  id="physicalAddressInput" placeholder="1234 Abundant Ave, Vancouver, V5T 6K5" />
+                <input [(ngModel)]="physicalAddress" name="physicalAddress" class="form-control" id="physicalAddressInput" placeholder="1234 Abundant Ave, Vancouver, V5T 6K5"
+                />
               </div>
             </div>
           </div>
@@ -33,7 +35,9 @@
             </div>
             <div class="panel-body">
               <div class="form-check" *ngFor="let reason of relationships; let i = index">
-                <label class="form-check-label"><input type="checkbox" name="relationship{{i}}"  class="form-check-input"[(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+                <label class="form-check-label">
+                  <input type="checkbox" name="relationship{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser"
+                  />{{reason.description}}</label>
               </div>
               <div class="form-group">
                 <label>Other relationship (use full sentences)</label>
@@ -47,12 +51,13 @@
               <h3 class="panel-title">Why do you support this project? (choose all that apply)</h3>
             </div>
             <div class="panel-body">
-              <div class="form-check" *ngFor="let reason of supportReasons; let i = index;" >
-                <label class="form-check-label"><input type="checkbox" name="support{{i}}"  class="form-check-input"[(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+              <div class="form-check" *ngFor="let reason of supportReasons; let i = index;">
+                <label class="form-check-label">
+                  <input type="checkbox" name="support{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
               </div>
               <div *ngFor="let customSupportReason of customSupportReasons; let i = index;" class="form-group">
                 <label>Custom reason {{i + 1}}</label>
-                <input [(ngModel)]="customSupportReason.text" name="customSupportReason{{i}}" class="form-control"/>
+                <input [(ngModel)]="customSupportReason.text" name="customSupportReason{{i}}" class="form-control" />
               </div>
               <button type="button" class="btn btn-primary" (click)="addCustomSupportReason()">+ Add custom reason</button>
             </div>
@@ -64,51 +69,60 @@
             </div>
             <div class="panel-body">
               <div class="form-check" *ngFor="let reason of improvements; let i = index;">
-                <label class="form-check-label"><input type="checkbox" name="improve{{i}}"  class="form-check-input"[(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+                <label class="form-check-label">
+                  <input type="checkbox" name="improve{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
               </div>
               <div *ngFor="let customImprovement of customImprovements; let i = index;" class="form-group">
                 <label>Custom suggestion {{i + 1}}</label>
-                <input [(ngModel)]="customImprovement.text" name="customImprovement{{i}}" class="form-control"/>
+                <input [(ngModel)]="customImprovement.text" name="customImprovement{{i}}" class="form-control" />
               </div>
               <button type="button" class="btn btn-primary" (click)="addCustomImprovement()">+ Add custom suggestion</button>
             </div>
           </div>
 
           <div class="form-group">
-            <button type="submit" (click)="warnAboutOverwrite() ? overwriteWarning.show() : generateText(); letterSubjectGroup.scrollIntoView();" class="btn btn-primary" [disabled]="!letterForm.form.valid">Generate Letter</button>
+            <button type="submit" (click)="warnAboutOverwrite() ? overwriteWarning.show() : generateText(); letterSubjectGroup.scrollIntoView();"
+              class="btn btn-primary" [disabled]="!letterForm.form.valid">Generate Letter</button>
           </div>
 
           <hr/>
           <label>Instructions</label>
-          <markdown>
-            After clicking Generate Letter, the fields below will be automatically populated. Please feel free to edit and personalize the letter. Once you're happy with the letter, you have two options for sending it:
-
-            1. Click Send Letter. This will put the letter in a queue for review (we need to make sure spammers can't misuse our tool), and it will be sent to council shortly.
-            1. Copy/paste the letter into your email client of choice, and send it to [publichearing@vancouver.ca](mailto:publichearing@vancouver.ca).
-          </markdown>
+          <p>
+            After clicking Generate Letter, the fields below will be automatically populated. Please feel free to edit and personalize
+            the letter. Once you're happy with the letter, you have two options for sending it:</p>
+          <ol>
+            <li>Click Send Letter. This will put the letter in a queue for review (we need to make sure spammers can't misuse
+              our tool), and it will be sent to council shortly.</li>
+            <li>Copy/paste the letter into your email client of choice, and send it to:
+              <span *ngFor="let address of project.emailToAddresses; let isLast=last">
+                <a href="mailto:{{address}}">{{address}}</a>{{isLast ? '' : ', '}}
+              </span>
+            </li>
+          </ol>
 
           <div class="form-group" #letterSubjectGroup>
             <label>Letter subject</label>
-            <input type="text" class="form-control" [(ngModel)]="letterSubject" name="letterSubject" placeholder="TBD" rows="16"/>
+            <input type="text" class="form-control" [(ngModel)]="letterSubject" name="letterSubject" placeholder="TBD" rows="16" />
           </div>
 
           <div class="form-group">
             <label>Letter body</label>
-            <textarea class="form-control" [(ngModel)]="letterBody" name="letterBody" placeholder="Will be filled in when you click Generate Letter" rows="16"></textarea>
+            <textarea class="form-control" [(ngModel)]="letterBody" name="letterBody" placeholder="Will be filled in when you click Generate Letter"
+              rows="16"></textarea>
           </div>
 
           <div class="form-group">
-              <label class="form-check-label">
-                <input type="checkbox" name="join" [(ngModel)]="joinMailingList"  class="form-check-input"/>Join the Abundant Housing Vancouver mailing list
-              </label>
-          </div> 
+            <label class="form-check-label">
+              <input type="checkbox" name="join" [(ngModel)]="joinMailingList" class="form-check-input" />Join the Abundant Housing Vancouver mailing list
+            </label>
+          </div>
 
           <div class="form-group">
             <button (click)="sendLetter();letterSent.show()" class="btn btn-primary" [disabled]="!readyToSendLetter()">{{sendLetterButtonText}}</button>
           </div>
         </form>
 
-        <app-modal #letterSent >
+        <app-modal #letterSent>
           <div class="app-modal-header">
             <strong>{{messageSentModalDialogHeader}}</strong>
           </div>
@@ -120,7 +134,7 @@
           </div>
         </app-modal>
 
-        <app-modal #overwriteWarning >
+        <app-modal #overwriteWarning>
           <div class="app-modal-header">
             <strong>Warning</strong>
           </div>
