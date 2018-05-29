@@ -4,6 +4,7 @@ import { Option } from './option';
 import { OptionType } from './option';
 import { RandomHelper } from './random-helper';
 import { OnInit } from '@angular/core';
+import { environment } from '../environments/environment';
 import * as Tabletop from 'tabletop';
 
 @Injectable()
@@ -11,25 +12,23 @@ export class DataService {
 
   private projectCache: Project[];
   private optionCache: Option[];
-  private textBankCache: {[id: string] : string[]};
+  private textBankCache: {[id: string]: string[]};
 
-  constructor(){
+  constructor() {
     this.projectCache = new Array<Project>();
     this.optionCache = new Array<Option>();
     this.textBankCache = {};
   }
 
-  init(callback: ()=> void)
-  {
-    //todo: don't hardcode key? Ahh who cares
-    Tabletop.init( { key: '1qHENcVnwTpmZpxgCXMdyQo_z7b56PTSMIU_ZYBMloGs',
+  init(callback: () => void) {
+    Tabletop.init( { key: environment.googleSpreadsheetKey,
                    callback: (data, tabletop) => {
                      this.parseSpreadsheetData(data, tabletop, this.projectCache, this.optionCache, this.textBankCache);
                      callback();
                    } } );
   }
 
-  //the cache parameters are dumb and shouldn't be necessary. For some reason I just couldn't get "this" to bind correctly in this method.
+  // the cache parameters are dumb and shouldn't be necessary. For some reason I just couldn't get "this" to bind correctly in this method.
   parseSpreadsheetData = (data: any, tabletop: any, 
     projectCache: Project[], optionCache: Option[], textBankCache: {[id: string] : string[]}) => 
   {
@@ -49,20 +48,22 @@ export class DataService {
 
     let options = data['Options'].all();
     options.forEach(function(o){
-      //todo: read option data
-      let newOption = new Option();
+      // todo: read option data
+      const newOption = new Option();
       newOption.type =  OptionType[o['Type'] as string];
-      newOption.id = o["ID"];
-      newOption.description = o["Description"];
-      let tags = o["Tags"] as string;
-      if(tags.trim() == "")
+      newOption.id = o['ID'];
+      newOption.description = o['Description'];
+      const tags = o['Tags'] as string;
+      if (tags.trim() === '') {
         newOption.tags = [];
-      else
-        newOption.tags = (o["Tags"] as string).split(",");
+      }
+      else {
+        newOption.tags = (o['Tags'] as string).split(',');
+      }
       optionCache.push(newOption);
     });
 
-    let textBank = data['Text Bank'].all();
+    const textBank = data['Text Bank'].all();
     textBank.forEach(function(tb){
       const id = tb['ID'] as string;
       const text = tb['Text'] as string;
@@ -86,15 +87,15 @@ export class DataService {
   }
 
   getOptions(type: OptionType): Option[]{
-    return this.optionCache.filter(function(o){return o.type === type});
+    return this.optionCache.filter(function(o){return o.type === type; });
   }
   getRandomTextBankEntry(id: string): string {
-    let sentences = this.textBankCache[id];
+    const sentences = this.textBankCache[id];
     return RandomHelper.RandomString(sentences);
   }
-  
+
     getRandomBulletPoint(): string{
-    var options = ['-','•'];
+    const options = ['-', '•'];
     return RandomHelper.RandomString(options);
   }
 
