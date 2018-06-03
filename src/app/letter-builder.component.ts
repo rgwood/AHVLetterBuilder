@@ -38,8 +38,6 @@ export class LetterBuilderComponent {
   demoMode: boolean = false;
   projectNotFound: boolean = false;
 
-  constructor(private dataService: DataService, private http: Http) { }
-
   // text for display
   sendLetterButtonText: string = 'Send Letter';
   messageSentModalDialogHeader: string = '';
@@ -308,18 +306,9 @@ export class LetterBuilderComponent {
     data['recipients'] = this.project.emailToAddresses;
 
     if (this.demoMode) {
-      console.log('Demo mode, not sending letter')
+      this.sendLetterSucceeded()
     } else {
       console.log('Posting letter');
-      let devUrl = 'https://sx4728j8aa.execute-api.us-west-2.amazonaws.com/dev/submit';
-      let prodUrl = 'https://lqpuutdeh1.execute-api.us-west-2.amazonaws.com/prod/submit';
-      let url = prodUrl;
-      let data = {};
-      data['name'] = this.name;
-      data['email'] = this.emailAddress;
-      data['subject'] = this.letterSubject;
-      data['content'] = this.letterBody;
-
       this.http.post(url, data)
       .subscribe(() => { },
         err => { console.log(err); this.sendLetterFailed(); },
