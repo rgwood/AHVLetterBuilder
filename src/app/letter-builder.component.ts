@@ -70,7 +70,6 @@ export class LetterBuilderComponent {
         this.customSupportReasons = [];
         this.improvements = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Improvement));
         this.customImprovements = [];
-        console.log(this.project)
         this.staticEmail = this.project.fullEmail.length !== 0
       }
       this.dataLoaded = true;
