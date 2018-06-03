@@ -42,7 +42,8 @@ export class DataService {
       let description = p["Description"].replace(/(\r\n|\n|\r)/gm,"");
       let address = p["Address"].replace(/(\r\n|\n|\r)/gm, '');
       let tags = (p["Tags"] as string).split(",");
-      let newProject = new Project(id, name, emailAddress, neighbourhood, description, address, tags);
+      let fullEmail = p["Full Email"];
+      let newProject = new Project(id, name, emailAddress, neighbourhood, description, address, tags, fullEmail);
       projectCache.push(newProject); 
     });
 

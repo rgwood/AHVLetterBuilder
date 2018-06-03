@@ -37,6 +37,7 @@ export class LetterBuilderComponent {
   letterSent: boolean = false;
   demoMode: boolean = false;
   projectNotFound: boolean = false;
+  staticEmail: boolean = false;
 
   // text for display
   sendLetterButtonText: string = 'Send Letter';
@@ -47,7 +48,7 @@ export class LetterBuilderComponent {
 
   ngOnInit(): void {
 
-    const defaultProjectId = '408-e-columbia';
+    const defaultProjectId = 'qboro-tmh';
 
     this.dataService.init(() => {
       const projectId = this.getQueryParams(location.search)['p'];
@@ -69,6 +70,8 @@ export class LetterBuilderComponent {
         this.customSupportReasons = [];
         this.improvements = this.getApplicableOptionsForProject(this.project, this.dataService.getOptions(OptionType.Improvement));
         this.customImprovements = [];
+        console.log(this.project)
+        this.staticEmail = this.project.fullEmail.length !== 0
       }
       this.dataLoaded = true;
       });
@@ -101,53 +104,61 @@ export class LetterBuilderComponent {
     this.addLineBreak();
     this.addSentence(this.getTextFromBank('openingSentence'));
 
-    this.relationships.filter(function (r) { return r.appliesToUser; }).forEach(element => {
-      this.addSentence(this.getTextFromBank(element.id));
-    });
-    if (this.customRelationship && this.customRelationship.trim() !== '') {
-      this.addSentence(this.customRelationship);
-    }
-    this.addLineBreak();
-    this.addLineBreak();
+    if (this.staticEmail) {
+      this.addLineBreak();
+      this.addLineBreak();
+      this.addText(this.project.fullEmail);
+      this.addLineBreak();
+    } else {
 
-    let applicableStandardRecommendations = this.recommendations.filter(function (r) { return r.appliesToUser; });
-    if (applicableStandardRecommendations.length > 0) {
-      if (applicableStandardRecommendations.length == 1) {
-        this.addLine(this.getTextFromBank('recommendationIntroSingle'));
+      this.relationships.filter(function (r) { return r.appliesToUser; }).forEach(element => {
+        this.addSentence(this.getTextFromBank(element.id));
+      });
+      if (this.customRelationship && this.customRelationship.trim() !== '') {
+        this.addSentence(this.customRelationship);
       }
-      else
-      {
-        this.addLine(this.getTextFromBank('recommendationIntroMultiple'));
+      this.addLineBreak();
+      this.addLineBreak();
+
+      let applicableStandardRecommendations = this.recommendations.filter(function (r) { return r.appliesToUser; });
+      if (applicableStandardRecommendations.length > 0) {
+        if (applicableStandardRecommendations.length == 1) {
+          this.addLine(this.getTextFromBank('recommendationIntroSingle'));
+        }
+        else
+        {
+          this.addLine(this.getTextFromBank('recommendationIntroMultiple'));
+        }
+        applicableStandardRecommendations.forEach(r => {
+          this.addLineItem(bullet, this.getTextFromBank(r.id));
+        });
+        this.addLineBreak();
       }
-      applicableStandardRecommendations.forEach(r => {
-        this.addLineItem(bullet, this.getTextFromBank(r.id));
-      });
-      this.addLineBreak();
-    }
 
-    let applicableStandardSupportReasons = this.supportReasons.filter(function (r) { return r.appliesToUser; });
-    if(applicableStandardSupportReasons.length > 0 || this.customSupportReasons.length > 0){
-      this.addSentence(this.getTextFromBank('supportReasonIntroStart'));
-      this.addLine(this.getTextFromBank('supportReasonIntroEnd'));
-      applicableStandardSupportReasons.forEach(element => {
-        this.addLineItem(bullet, this.getTextFromBank(element.id));
-      });
-      this.customSupportReasons.forEach(r => {
-        this.addLineItem(bullet, r.text);
-      });
-      this.addLineBreak();
-    }
+      let applicableStandardSupportReasons = this.supportReasons.filter(function (r) { return r.appliesToUser; });
+      if(applicableStandardSupportReasons.length > 0 || this.customSupportReasons.length > 0){
+        this.addSentence(this.getTextFromBank('supportReasonIntroStart'));
+        this.addLine(this.getTextFromBank('supportReasonIntroEnd'));
+        applicableStandardSupportReasons.forEach(element => {
+          this.addLineItem(bullet, this.getTextFromBank(element.id));
+        });
+        this.customSupportReasons.forEach(r => {
+          this.addLineItem(bullet, r.text);
+        });
+        this.addLineBreak();
+      }
 
-    const applicableImprovementSuggestions = this.improvements.filter(function (r) { return r.appliesToUser; });
-    if (applicableImprovementSuggestions.length > 0 || this.customImprovements.length > 0) {
-      this.addLine(this.getTextFromBank('improvementIntro'));
-      applicableImprovementSuggestions.forEach(element => {
-        this.addLineItem(bullet, this.getTextFromBank(element.id));
-      });
-      this.customImprovements.forEach(r => {
-        this.addLineItem(bullet, r.text);
-      });
-      this.addLineBreak();
+      const applicableImprovementSuggestions = this.improvements.filter(function (r) { return r.appliesToUser; });
+      if (applicableImprovementSuggestions.length > 0 || this.customImprovements.length > 0) {
+        this.addLine(this.getTextFromBank('improvementIntro'));
+        applicableImprovementSuggestions.forEach(element => {
+          this.addLineItem(bullet, this.getTextFromBank(element.id));
+        });
+        this.customImprovements.forEach(r => {
+          this.addLineItem(bullet, r.text);
+        });
+        this.addLineBreak();
+      }
     }
 
     // don't always (ever?) need a closer...

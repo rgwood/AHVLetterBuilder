@@ -33,54 +33,66 @@
             </div>
           </div>
 
-          <div class="panel panel-primary">
-            <div class="panel-heading">
-              <h3 class="panel-title">Your relation to the project (choose all that apply)</h3>
-            </div>
-            <div class="panel-body">
-              <div class="form-check" *ngFor="let reason of relationships; let i = index">
-                <label class="form-check-label">
-                  <input type="checkbox" name="relationship{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser"
-                  />{{reason.description}}</label>
+          <div *ngIf="staticEmail">
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">The following email will be sent on your behalf:</h3>
               </div>
-              <div class="form-group">
-                <label>Other relationship (use full sentences)</label>
-                <input [(ngModel)]="customRelationship" name="customRelationshipInput" class="form-control" />
+              <div class="panel-body">
+                <div class="form-check" style="white-space: pre">{{project.fullEmail}}</div>
               </div>
             </div>
           </div>
+          <div *ngIf="!staticEmail">
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">Your relation to the project (choose all that apply)</h3>
+              </div>
+              <div class="panel-body">
+                <div class="form-check" *ngFor="let reason of relationships; let i = index">
+                  <label class="form-check-label">
+                    <input type="checkbox" name="relationship{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser"
+                    />{{reason.description}}</label>
+                </div>
+                <div class="form-group">
+                  <label>Other relationship (use full sentences)</label>
+                  <input [(ngModel)]="customRelationship" name="customRelationshipInput" class="form-control" />
+                </div>
+              </div>
+            </div>
 
-          <div class="panel panel-primary">
-            <div class="panel-heading">
-              <h3 class="panel-title">Why do you support this project? (choose all that apply)</h3>
-            </div>
-            <div class="panel-body">
-              <div class="form-check" *ngFor="let reason of supportReasons; let i = index;">
-                <label class="form-check-label">
-                  <input type="checkbox" name="support{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">Why do you support this project? (choose all that apply)</h3>
               </div>
-              <div *ngFor="let customSupportReason of customSupportReasons; let i = index;" class="form-group">
-                <label>Custom reason {{i + 1}}</label>
-                <input [(ngModel)]="customSupportReason.text" name="customSupportReason{{i}}" class="form-control" />
+              <div class="panel-body">
+                <div class="form-check" *ngFor="let reason of supportReasons; let i = index;">
+                  <label class="form-check-label">
+                    <input type="checkbox" name="support{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+                </div>
+                <div *ngFor="let customSupportReason of customSupportReasons; let i = index;" class="form-group">
+                  <label>Custom reason {{i + 1}}</label>
+                  <input [(ngModel)]="customSupportReason.text" name="customSupportReason{{i}}" class="form-control" />
+                </div>
+                <button type="button" class="btn btn-primary" (click)="addCustomSupportReason()">+ Add custom reason</button>
               </div>
-              <button type="button" class="btn btn-primary" (click)="addCustomSupportReason()">+ Add custom reason</button>
             </div>
-          </div>
 
-          <div class="panel panel-primary">
-            <div class="panel-heading">
-              <h3 class="panel-title">What do you think could be improved? (choose all that apply)</h3>
-            </div>
-            <div class="panel-body">
-              <div class="form-check" *ngFor="let reason of improvements; let i = index;">
-                <label class="form-check-label">
-                  <input type="checkbox" name="improve{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+            <div class="panel panel-primary">
+              <div class="panel-heading">
+                <h3 class="panel-title">What do you think could be improved? (choose all that apply)</h3>
               </div>
-              <div *ngFor="let customImprovement of customImprovements; let i = index;" class="form-group">
-                <label>Custom suggestion {{i + 1}}</label>
-                <input [(ngModel)]="customImprovement.text" name="customImprovement{{i}}" class="form-control" />
+              <div class="panel-body">
+                <div class="form-check" *ngFor="let reason of improvements; let i = index;">
+                  <label class="form-check-label">
+                    <input type="checkbox" name="improve{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+                </div>
+                <div *ngFor="let customImprovement of customImprovements; let i = index;" class="form-group">
+                  <label>Custom suggestion {{i + 1}}</label>
+                  <input [(ngModel)]="customImprovement.text" name="customImprovement{{i}}" class="form-control" />
+                </div>
+                <button type="button" class="btn btn-primary" (click)="addCustomImprovement()">+ Add custom suggestion</button>
               </div>
-              <button type="button" class="btn btn-primary" (click)="addCustomImprovement()">+ Add custom suggestion</button>
             </div>
           </div>
 
