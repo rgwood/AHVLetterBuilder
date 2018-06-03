@@ -37,7 +37,7 @@ export class DataService {
       //todo: error handling
       let id = p["ID"].replace(/(\r\n|\n|\r)/gm,"");
       let name = p["Name"].replace(/(\r\n|\n|\r)/gm,"");
-      let emailAddress = p["Email to"].replace(/(\r\n|\n|\r)/gm,"");
+      let emailAddress = p['Send Emails To'].split('\n').map(a => a.trim());
       let neighbourhood = p["Neighbourhood name"].replace(/(\r\n|\n|\r)/gm,"");
       let description = p["Description"].replace(/(\r\n|\n|\r)/gm,"");
       let address = p["Address"].replace(/(\r\n|\n|\r)/gm, '');
