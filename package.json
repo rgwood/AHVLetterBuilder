@@ -5,6 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start-bigvertigo": "ng serve --env=bigvertigo",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
