@@ -25,29 +25,33 @@ export class LetterBuilderComponent {
   customSupportReasons: CustomOption[];
   improvements: Option[];
   customImprovements: CustomOption[];
-  name: string = '';
-  emailAddress: string = '';
-  physicalAddress: string = '';
-  letterSubject: string = '';
-  letterBody: string = '';
-  joinMailingList: boolean = false;
-  dataLoaded: boolean = false;
-  letterSent: boolean = false;
-  demoMode: boolean = false;
+  name = '';
+  emailAddress = '';
+  physicalAddress = '';
+  letterSubject = '';
+  letterBody = '';
+  pageURL= '';
+  joinMailingList = false;
+  dataLoaded = false;
+  letterSent = false;
+  demoMode = false;
+  projectFailedToLoad = false;
 
   // text for display
-  sendLetterButtonText: string = 'Send Letter';
-  messageSentModalDialogHeader: string = '';
+  sendLetterButtonText = 'Send Letter';
+  messageSentModalDialogHeader = '';
   messageSentModalDialogBody = '';
 
   constructor(private dataService: DataService, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.dataService.init(() => {
+      this.pageURL = location.href;
       const projectId = this.getQueryParams(location.search)['p'];
       const proj = this.dataService.getProject(projectId);
       if (proj == null) {
         this.project = new Project('404', '404', ['nobody@nowhere.com'], '404', 'Project not found', []);
+        this.projectFailedToLoad = true;
       }
       else {
         this.project = this.dataService.getProject(projectId);
