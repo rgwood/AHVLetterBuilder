@@ -5,7 +5,7 @@ import { OptionType } from './option';
 import { RandomHelper } from './random-helper';
 import { OnInit } from '@angular/core';
 import { environment } from '../environments/environment';
-import * as Tabletop from 'tabletop';
+import * as Tabletop from './tabletop';
 
 @Injectable()
 export class DataService {
