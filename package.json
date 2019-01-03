@@ -10,7 +10,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build-prod": "ng build --target=production --output-hashing none"
+    "build-prod": "ng build --configuration=production --output-hashing none"
   },
   "private": true,
   "dependencies": {
