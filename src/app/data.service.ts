@@ -29,25 +29,25 @@ export class DataService {
   }
 
   // the cache parameters are dumb and shouldn't be necessary. For some reason I just couldn't get "this" to bind correctly in this method.
-  parseSpreadsheetData = (data: any, tabletop: any, 
+  parseSpreadsheetData = (data: any, tabletop: any,
     projectCache: Project[], optionCache: Option[], textBankCache: {[id: string]: string[]}) => {
     console.log('got data from tabletop');
-    let projects = data['Projects'].all();
-    projects.forEach(function(p){
+    const projects = data['Projects'].all();
+    projects.forEach(function(p) {
       // todo: error handling
-      let id = p['ID'];
-      let name = p['Name'];
-      let emailAddress = p['Send Emails To'].split('\n').map(a => a.trim());
-      let neighbourhood = p['Neighbourhood name'];
-      let description = p['Description'];
-      let tags = (p['Tags'] as string).split(',');
+      const id = p['ID'];
+      const name = p['Name'];
+      const emailAddress = p['Send Emails To'].split('\n').map(a => a.trim());
+      const neighbourhood = p['Neighbourhood name'];
+      const description = p['Description'];
+      const tags = (p['Tags'] as string).split(',');
 
       const newProject = new Project(id, name, emailAddress, neighbourhood, description, tags);
       projectCache.push(newProject);
     });
 
-    let options = data['Options'].all();
-    options.forEach(function(o){
+    const options = data['Options'].all();
+    options.forEach(function(o) {
       // todo: read option data
       const newOption = new Option();
       newOption.type =  OptionType[o['Type'] as string];
@@ -64,7 +64,7 @@ export class DataService {
     });
 
     const textBank = data['Text Bank'].all();
-    textBank.forEach(function(tb){
+    textBank.forEach(function(tb) {
       const id = tb['ID'] as string;
       const text = tb['Text'] as string;
       if (id in textBankCache) {
@@ -87,15 +87,15 @@ export class DataService {
     }
   }
 
-  getOptions(type: OptionType): Option[]{
-    return this.optionCache.filter(function(o){return o.type === type; });
+  getOptions(type: OptionType): Option[] {
+    return this.optionCache.filter(function(o) {return o.type === type; });
   }
   getRandomTextBankEntry(id: string): string {
     const sentences = this.textBankCache[id];
     return RandomHelper.RandomString(sentences);
   }
 
-    getRandomBulletPoint(): string{
+    getRandomBulletPoint(): string {
     const options = ['-', '•'];
     return RandomHelper.RandomString(options);
   }
