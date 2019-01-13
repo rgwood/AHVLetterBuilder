@@ -117,7 +117,9 @@ export class LetterBuilderComponent implements OnInit {
         this.addLineItem(bullet, this.getTextFromBank(element.id));
       });
       this.customSupportReasons.forEach(r => {
-        this.addLineItem(bullet, r.text);
+        if (r.text.trim() !== '') {
+          this.addLineItem(bullet, r.text);
+        }
       });
       this.addLineBreak();
     }
