@@ -36,13 +36,34 @@
   * @import "components/forms";
   */
  
-.form-label{
-    @apply block font-bold mb-2 mt-2 text-sm;
+.panel {
+    @apply m-2 border border-blue-dark rounded;
 }
 
-.form-control {
-    @apply text-grey-darkest w-full p-2 border border-grey rounded
+.panel-header {
+    @apply bg-blue-dark text-lg text-white p-3 font-medium;
 }
+
+.form-group {
+    @apply mt-2;
+}
+
+.form-group:first-child {
+    @apply mt-0;
+}
+
+.form-label{
+    @apply block font-bold mb-2 text-sm;
+}
+
+.text-input {
+    @apply text-grey-darkest w-full p-2 border border-grey rounded;
+}
+
+.input-error-message {
+    @apply w-full p-2 border border-red bg-red-lighter text-red-darker rounded;
+}
+
 
  /**
   * This injects all of Tailwind's utility classes, generated based on your

@@ -13,32 +13,32 @@
 
         <div [hidden]="projectFailedToLoad">
           <h1>{{project.name}}</h1>
-          <markdown>{{project.description}}</markdown>
+          <markdown class="leading-normal">{{project.description}}</markdown>
           <form #letterForm="ngForm" disabled="true">
-            <div class="border border-blue-dark rounded">
-              <div class="bg-blue-dark text-lg text-white p-3 font-medium">
+            <div class="panel">
+              <div class="panel-header">
                   Your Information
               </div>
               <div class="p-3">
-                <div class="" >
-                  <label class="block font-bold mb-2 text-sm" for="nameInput">Full Name (required)</label>
+                <div class="form-group" >
+                  <label class="form-label" for="nameInput">Full Name (required)</label>
                   <input [(ngModel)]="name" #nameInput="ngModel" name="fullName" 
-                      class="text-grey-darkest w-full p-2 border border-grey rounded" placeholder="Jane Doe" 
+                      class="text-input" placeholder="Jane Doe" 
                       [ngClass]="{'border-red': nameInput.invalid && nameInput.dirty}"
                       required/>
-                  <div [hidden]=" nameInput.valid || nameInput.pristine" class="w-full p-2 border border-red bg-red-lighter text-red-darker rounded">
+                  <div [hidden]=" nameInput.valid || nameInput.pristine" class="input-error-message">
                     Name is required
                   </div>
                 </div>
-                <div class=form-group [ngClass]="{'has-error': emailInput.invalid && emailInput.dirty}">
+                <div class="form-group">
                   <label class="form-label" for="emailAddressInput">Email Address (required)</label>
-                  <input type="email" [(ngModel)]="emailAddress" #emailInput="ngModel" name="emailAddress" class="form-control" id="emailAddressInput"
+                  <input type="email" [(ngModel)]="emailAddress" #emailInput="ngModel" name="emailAddress" class="text-input" id="emailAddressInput"
                     placeholder="address@domain.com" required email/>
-                  <div [hidden]=" emailInput.valid || emailInput.pristine" class="alert alert-danger">Please enter a valid email address</div>
+                  <div [hidden]=" emailInput.valid || emailInput.pristine" class="input-error-message">Please enter a valid email address</div>
                 </div>
                 <div class=form-group>
                   <label class="form-label" for="physicalAddressInput">Address (optional)</label>
-                  <input [(ngModel)]="physicalAddress" name="physicalAddress" class="form-control" id="physicalAddressInput" placeholder="1234 Abundant Ave, Vancouver, V5T 6K5"
+                  <input [(ngModel)]="physicalAddress" name="physicalAddress" class="text-input" id="physicalAddressInput" placeholder="1234 Abundant Ave, Vancouver, V5T 6K5"
                   />
                 </div>
               </div>
