@@ -44,55 +44,51 @@
               </div>
             </div>
 
-            <div class="panel panel-primary">
-              <div class="panel-heading">
-                <h3 class="panel-title">Your relation to the project (choose all that apply)</h3>
+            <div class="panel">
+              <div class="panel-header">
+                Your relation to the project (choose all that apply)
               </div>
-              <div class="panel-body">
-                <div class="form-check" *ngFor="let reason of relationships; let i = index">
-                  <label class="form-check-label">
+              <div class="p-3">
+                <div *ngFor="let reason of relationships; let i = index">
+                  <label class="text-sm">
                     <input type="checkbox" name="relationship{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
                 </div>
                 <div class="form-group">
-                  <label>Other relationship (use full sentences)</label>
-                  <input [(ngModel)]="customRelationship" name="customRelationshipInput" class="form-control" />
+                  <label class="form-label">Other relationship (use full sentences)</label>
+                  <input [(ngModel)]="customRelationship" name="customRelationshipInput" class="text-input" />
                 </div>
               </div>
             </div>
 
-            <div class="panel panel-primary">
-              <div class="panel-heading">
-                <h3 class="panel-title">Why do you support this project? (choose all that apply)</h3>
-              </div>
-              <div class="panel-body">
-                <div class="form-check" *ngFor="let reason of supportReasons; let i = index;">
-                  <label class="form-check-label">
+            <div class="panel">
+              <div class="panel-header">Why do you support this project? (choose all that apply)</div>
+              <div class="p-3">
+                <div *ngFor="let reason of supportReasons; let i = index;">
+                  <label class="text-sm">
                     <input type="checkbox" name="support{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
                 </div>
                 <div *ngFor="let customSupportReason of customSupportReasons; let i = index;" class="form-group">
-                  <label>Custom reason {{i + 1}}</label>
-                  <input [(ngModel)]="customSupportReason.text" name="customSupportReason{{i}}" class="form-control" />
+                  <label class="form-label">Custom reason {{i + 1}}</label>
+                  <input [(ngModel)]="customSupportReason.text" name="customSupportReason{{i}}" class="text-input" />
                 </div>
-                <button type="button" class="btn btn-primary" (click)="addCustomSupportReason()" [disabled]="disableGenerateAndSend">
+                <button type="button" class="button" (click)="addCustomSupportReason()" [disabled]="disableGenerateAndSend">
                   + Add custom reason
                 </button>
               </div>
             </div>
 
-            <div class="panel panel-primary">
-              <div class="panel-heading">
-                <h3 class="panel-title">What do you think could be improved? (choose all that apply)</h3>
-              </div>
-              <div class="panel-body">
-                <div class="form-check" *ngFor="let reason of improvements; let i = index;">
-                  <label class="form-check-label">
+            <div class="panel">
+              <div class="panel-header">What do you think could be improved? (choose all that apply)</div>
+              <div class="p-3">
+                <div *ngFor="let reason of improvements; let i = index;">
+                  <label class="text-sm">
                     <input type="checkbox" name="improve{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
                 </div>
                 <div *ngFor="let customImprovement of customImprovements; let i = index;" class="form-group">
-                  <label>Custom suggestion {{i + 1}}</label>
-                  <input [(ngModel)]="customImprovement.text" name="customImprovement{{i}}" class="form-control" />
+                  <label class="form-label">Custom suggestion {{i + 1}}</label>
+                  <input [(ngModel)]="customImprovement.text" name="customImprovement{{i}}" class="text-input" />
                 </div>
-                <button type="button" class="btn btn-primary" (click)="addCustomImprovement()" [disabled]="disableGenerateAndSend">
+                <button class="button" (click)="addCustomImprovement()" [disabled]="disableGenerateAndSend">
                   + Add custom suggestion
                 </button>
               </div>
@@ -100,7 +96,7 @@
 
             <div class="form-group">
               <button type="submit" (click)="warnAboutOverwrite() ? overwriteWarning.show() : generateText(); letterSubjectGroup.scrollIntoView();"
-                class="btn btn-primary" [disabled]="!letterForm.form.valid || disableGenerateAndSend">Generate Letter</button>
+                class="button" [disabled]="!letterForm.form.valid || disableGenerateAndSend">Generate Letter</button>
             </div>
 
             <hr/>
