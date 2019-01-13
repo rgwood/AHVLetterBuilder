@@ -6,7 +6,7 @@ export class Project {
     description: string;
     tags: string[];
 
-    constructor(id: string, name: string, emailToAddresses: string[], neighbourhood: string, description: string, tags: string[]){
+    constructor(id: string, name: string, emailToAddresses: string[], neighbourhood: string, description: string, tags: string[]) {
         this.id = id;
         this.name = name;
         this.emailToAddresses = emailToAddresses;

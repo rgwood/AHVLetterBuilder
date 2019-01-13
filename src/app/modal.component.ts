@@ -31,7 +31,7 @@ export class ModalComponent {
   public visible = false;
   public visibleAnimate = false;
 
-  constructor(){}
+  constructor() {}
 
   public show(): void {
     this.visible = true;

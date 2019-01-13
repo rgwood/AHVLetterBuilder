@@ -17,7 +17,7 @@ import { environment } from '../environments/environment';
   providers: [DataService]
 })
 
-export class LetterBuilderComponent {
+export class LetterBuilderComponent implements OnInit {
   project: Project;
   relationships: Option[];
   customRelationship: string;
@@ -30,7 +30,7 @@ export class LetterBuilderComponent {
   physicalAddress = '';
   letterSubject = '';
   letterBody = '';
-  pageURL= '';
+  pageURL = '';
   joinMailingList = false;
   dataLoaded = false;
   letterSent = false;
@@ -200,6 +200,7 @@ export class LetterBuilderComponent {
           const o = Object(this);
 
           // 2. Let len be ? ToLength(? Get(O, "length")).
+          // tslint:disable-next-line:no-bitwise
           const len = o.length >>> 0;
 
           // 3. If len is 0, return false.
@@ -209,6 +210,7 @@ export class LetterBuilderComponent {
 
           // 4. Let n be ? ToInteger(fromIndex).
           //    (If fromIndex is undefined, this step produces the value 0.)
+          // tslint:disable-next-line:no-bitwise
           const n = fromIndex | 0;
 
           // 5. If n ≥ 0, then
@@ -241,10 +243,9 @@ export class LetterBuilderComponent {
 
     qs = qs.split('+').join(' ');
 
-    let params = {},
-      tokens,
+    const params = {},
       re = /[?&]?([^=]+)=([^&]*)/g;
-
+    let tokens;
     while (tokens = re.exec(qs)) {
       params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
     }
@@ -303,12 +304,14 @@ export class LetterBuilderComponent {
     this.letterSent = true;
     this.sendLetterButtonText = 'Letter sent';
     this.messageSentModalDialogHeader = 'All Done';
-    this.messageSentModalDialogBody = 'Your letter has been added to the review queue and will be sent to council shortly. Thank you so much!';
+    this.messageSentModalDialogBody =
+      'Your letter has been added to the review queue and will be sent to council shortly. Thank you so much!';
   }
 
   sendLetterFailed(): void {
     console.log('Message failed to send');
     this.messageSentModalDialogHeader = 'Message failed to send';
-    this.messageSentModalDialogBody = 'The message failed to send, sorry about that! Try again, and if it still doesn\'t work please let us know.';
+    this.messageSentModalDialogBody =
+      'The message failed to send, sorry about that! Try again, and if it still doesn\'t work please let us know.';
   }
 }
