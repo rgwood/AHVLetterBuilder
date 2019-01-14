@@ -71,7 +71,7 @@
                   <label class="form-label">Custom reason {{i + 1}}</label>
                   <input [(ngModel)]="customSupportReason.text" name="customSupportReason{{i}}" class="text-input" />
                 </div>
-                <button type="button" class="button" (click)="addCustomSupportReason()" [disabled]="disableGenerateAndSend">
+                <button type="button" class="button mt-2" (click)="addCustomSupportReason()" [disabled]="disableGenerateAndSend">
                   + Add custom reason
                 </button>
               </div>
@@ -88,7 +88,7 @@
                   <label class="form-label">Custom suggestion {{i + 1}}</label>
                   <input [(ngModel)]="customImprovement.text" name="customImprovement{{i}}" class="text-input" />
                 </div>
-                <button class="button" (click)="addCustomImprovement()" [disabled]="disableGenerateAndSend">
+                <button class="button mt-2" (click)="addCustomImprovement()" [disabled]="disableGenerateAndSend">
                   + Add custom suggestion
                 </button>
               </div>
@@ -138,27 +138,21 @@
         </div>
 
         <app-modal #letterSent>
-          <div class="app-modal-header">
-            <strong>{{messageSentModalDialogHeader}}</strong>
-          </div>
-          <div class="app-modal-body">
-            {{messageSentModalDialogBody}}
-          </div>
+          <div class="app-modal-header">{{messageSentModalDialogHeader}}</div>
+          <div class="app-modal-body">{{messageSentModalDialogBody}}</div>
           <div class="app-modal-footer">
             <button type="button" class="button" (click)="letterSent.hide()">Close</button>
           </div>
         </app-modal>
 
         <app-modal #overwriteWarning>
-          <div class="app-modal-header">
-            <strong>Warning</strong>
-          </div>
+          <div class="app-modal-header">Warning</div>
           <div class="app-modal-body">
             If you click Generate Letter it will overwrite the current letter text. Are you sure?
           </div>
-          <div class="app-modal-footer">
-            <button type="button" class="button" (click)="overwriteWarning.hide()">Cancel</button>
+          <div class="app-modal-footer flex flex-row-reverse">
             <button type="button" class="button" (click)="generateText();overwriteWarning.hide()">Generate Letter</button>
+            <button type="button" class="button mx-2" (click)="overwriteWarning.hide()">Cancel</button>
           </div>
         </app-modal>
 
