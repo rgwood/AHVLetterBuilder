@@ -100,7 +100,7 @@
             </div>
 
             <hr/>
-            <label>Instructions</label>
+            <h4>Instructions</h4>
             <p>
               After clicking Generate Letter, the fields below will be automatically populated. Please feel free to edit and personalize
               the letter. Once you're happy with the letter, you have two options for sending it:</p>
@@ -115,13 +115,13 @@
             </ol>
 
             <div class="form-group" #letterSubjectGroup>
-              <label>Letter subject</label>
-              <input type="text" class="form-control" [(ngModel)]="letterSubject" name="letterSubject" placeholder="TBD" rows="16" />
+              <h4>Letter Subject</h4>
+              <input type="text" class="text-input" [(ngModel)]="letterSubject" name="letterSubject" placeholder="TBD" rows="16" />
             </div>
 
             <div class="form-group">
-              <label>Letter body</label>
-              <textarea class="form-control" [(ngModel)]="letterBody" name="letterBody" placeholder="Will be filled in when you click Generate Letter"
+              <h4>Letter Body</h4>
+              <textarea class="text-input" [(ngModel)]="letterBody" name="letterBody" placeholder="Will be filled in when you click Generate Letter"
                 rows="16"></textarea>
             </div>
 
@@ -132,7 +132,7 @@
             </div>
 
             <div class="form-group">
-              <button (click)="sendLetter();letterSent.show()" class="btn btn-primary" [disabled]="!readyToSendLetter() || disableGenerateAndSend">{{sendLetterButtonText}}</button>
+              <button (click)="sendLetter();letterSent.show()" class="button" [disabled]="!readyToSendLetter() || disableGenerateAndSend">{{sendLetterButtonText}}</button>
             </div>
           </form>
         </div>
@@ -145,7 +145,7 @@
             {{messageSentModalDialogBody}}
           </div>
           <div class="app-modal-footer">
-            <button type="button" class="btn btn-primary" (click)="letterSent.hide()">Close</button>
+            <button type="button" class="button" (click)="letterSent.hide()">Close</button>
           </div>
         </app-modal>
 
@@ -157,8 +157,8 @@
             If you click Generate Letter it will overwrite the current letter text. Are you sure?
           </div>
           <div class="app-modal-footer">
-            <button type="button" class="btn btn-primary" (click)="overwriteWarning.hide()">Cancel</button>
-            <button type="button" class="btn btn-primary" (click)="generateText();overwriteWarning.hide()">Generate Letter</button>
+            <button type="button" class="button" (click)="overwriteWarning.hide()">Cancel</button>
+            <button type="button" class="button" (click)="generateText();overwriteWarning.hide()">Generate Letter</button>
           </div>
         </app-modal>
 
