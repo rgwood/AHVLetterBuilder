@@ -567,7 +567,8 @@ table {
   */
 
 .panel {
-  margin: .5rem;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
   border-width: 1px;
   border-color: #2779bd;
   border-radius: .25rem;

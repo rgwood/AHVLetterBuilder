@@ -37,7 +37,7 @@
   */
  
 .panel {
-    @apply m-2 border border-blue-dark rounded;
+    @apply my-2 border border-blue-dark rounded;
 }
 
 .panel-header {
