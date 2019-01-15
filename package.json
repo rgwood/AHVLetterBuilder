@@ -11,6 +11,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build-prod": "ngtw build && ng build --configuration=production --output-hashing none",
+    "netlify-deploy": "netlify deploy --prod --dir=dist",
     "prestart": "ngtw build"
   },
   "private": true,
