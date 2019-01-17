@@ -555,11 +555,11 @@ table {
   */
 
 .panel {
-  margin-top: .5rem;
-  margin-bottom: .5rem;
-  border-width: 1px;
-  border-color: #2779bd;
-  border-radius: .25rem;
+  margin-top: .5rem !important;
+  margin-bottom: .5rem !important;
+  border-width: 1px !important;
+  border-color: #2779bd !important;
+  border-radius: .25rem !important;
 }
 
 .panel-header {
@@ -602,6 +602,10 @@ table {
   background-color: #f9acaa;
   color: #621b18;
   border-radius: .25rem;
+}
+
+.button {
+  border-width: 0 !important;
 }
 
 .button {
@@ -4137,6 +4141,10 @@ table {
   z-index: 50;
 }
 
+.z-10000 {
+  z-index: 10000;
+}
+
 .z-auto {
   z-index: auto;
 }
@@ -7637,6 +7645,10 @@ table {
     z-index: 50;
   }
 
+  .md\:z-10000 {
+    z-index: 10000;
+  }
+
   .md\:z-auto {
     z-index: auto;
   }
@@ -11121,6 +11133,10 @@ table {
 
   .xl\:z-50 {
     z-index: 50;
+  }
+
+  .xl\:z-10000 {
+    z-index: 10000;
   }
 
   .xl\:z-auto {
