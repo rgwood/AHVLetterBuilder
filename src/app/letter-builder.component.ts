@@ -11,7 +11,7 @@ import { ModalComponent } from './modal.component';
 import { environment } from '../environments/environment';
 
 @Component({
-  selector: 'app-root',
+  selector: 'letter-builder',
   templateUrl: './letter-builder.component.html',
   styleUrls: ['./letter-builder.component.css'],
   providers: [DataService]
@@ -117,7 +117,9 @@ export class LetterBuilderComponent implements OnInit {
         this.addLineItem(bullet, this.getTextFromBank(element.id));
       });
       this.customSupportReasons.forEach(r => {
-        this.addLineItem(bullet, r.text);
+        if (r.text.trim() !== '') {
+          this.addLineItem(bullet, r.text);
+        }
       });
       this.addLineBreak();
     }

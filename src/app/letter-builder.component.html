@@ -1,167 +1,163 @@
 <div *ngIf="dataLoaded">
-  <div class='container'>
-    <div class='row'>
-      <div class='col-xs-12 col-md-8'>
-        <div [hidden]="!projectFailedToLoad">
-          <h1>404 - Could Not Find Project</h1>
-          Project failed to load. Please try reloading the page, and if it still doesn't work 
-          <a href="mailto:info@abundanthousingvancouver.com?subject=Generator not working&body=Hi, I was unable to access the letter generator at {{pageURL}}">
-            email us with relevant technical info (browser version, OS)
-          </a>
-          or <a href="https://github.com/rgwood/AHVLetterBuilder/issues/new">file an issue on GitHub</a>. Thanks!
-        </div>
-
-        <div [hidden]="projectFailedToLoad">
-          <h1>{{project.name}}</h1>
-          <markdown>{{project.description}}</markdown>
-          <form #letterForm="ngForm" disabled="true">
-            <div class="panel panel-primary">
-              <div class="panel-heading">
-                <h3 class="panel-title">Your Information</h3>
-              </div>
-              <div class="panel-body">
-                <div class="form-group" [ngClass]="{'has-error': nameInput.invalid && nameInput.dirty}">
-                  <label for="nameInput">Full Name (required)</label>
-                  <input [(ngModel)]="name" #nameInput="ngModel" name="fullName" class="form-control" placeholder="Jane Doe" required/>
-                  <div [hidden]=" nameInput.valid || nameInput.pristine" class="alert alert-danger">Name is required</div>
-                </div>
-                <div class=form-group [ngClass]="{'has-error': emailInput.invalid && emailInput.dirty}">
-                  <label for="emailAddressInput">Email Address (required)</label>
-                  <input type="email" [(ngModel)]="emailAddress" #emailInput="ngModel" name="emailAddress" class="form-control" id="emailAddressInput"
-                    placeholder="address@domain.com" required email/>
-                  <div [hidden]=" emailInput.valid || emailInput.pristine" class="alert alert-danger">Please enter a valid email address</div>
-                </div>
-                <div class=form-group>
-                  <label for="physicalAddressInput">Address (optional)</label>
-                  <input [(ngModel)]="physicalAddress" name="physicalAddress" class="form-control" id="physicalAddressInput" placeholder="1234 Abundant Ave, Vancouver, V5T 6K5"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="panel panel-primary">
-              <div class="panel-heading">
-                <h3 class="panel-title">Your relation to the project (choose all that apply)</h3>
-              </div>
-              <div class="panel-body">
-                <div class="form-check" *ngFor="let reason of relationships; let i = index">
-                  <label class="form-check-label">
-                    <input type="checkbox" name="relationship{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
-                </div>
-                <div class="form-group">
-                  <label>Other relationship (use full sentences)</label>
-                  <input [(ngModel)]="customRelationship" name="customRelationshipInput" class="form-control" />
-                </div>
-              </div>
-            </div>
-
-            <div class="panel panel-primary">
-              <div class="panel-heading">
-                <h3 class="panel-title">Why do you support this project? (choose all that apply)</h3>
-              </div>
-              <div class="panel-body">
-                <div class="form-check" *ngFor="let reason of supportReasons; let i = index;">
-                  <label class="form-check-label">
-                    <input type="checkbox" name="support{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
-                </div>
-                <div *ngFor="let customSupportReason of customSupportReasons; let i = index;" class="form-group">
-                  <label>Custom reason {{i + 1}}</label>
-                  <input [(ngModel)]="customSupportReason.text" name="customSupportReason{{i}}" class="form-control" />
-                </div>
-                <button type="button" class="btn btn-primary" (click)="addCustomSupportReason()" [disabled]="disableGenerateAndSend">
-                  + Add custom reason
-                </button>
-              </div>
-            </div>
-
-            <div class="panel panel-primary">
-              <div class="panel-heading">
-                <h3 class="panel-title">What do you think could be improved? (choose all that apply)</h3>
-              </div>
-              <div class="panel-body">
-                <div class="form-check" *ngFor="let reason of improvements; let i = index;">
-                  <label class="form-check-label">
-                    <input type="checkbox" name="improve{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
-                </div>
-                <div *ngFor="let customImprovement of customImprovements; let i = index;" class="form-group">
-                  <label>Custom suggestion {{i + 1}}</label>
-                  <input [(ngModel)]="customImprovement.text" name="customImprovement{{i}}" class="form-control" />
-                </div>
-                <button type="button" class="btn btn-primary" (click)="addCustomImprovement()" [disabled]="disableGenerateAndSend">
-                  + Add custom suggestion
-                </button>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <button type="submit" (click)="warnAboutOverwrite() ? overwriteWarning.show() : generateText(); letterSubjectGroup.scrollIntoView();"
-                class="btn btn-primary" [disabled]="!letterForm.form.valid || disableGenerateAndSend">Generate Letter</button>
-            </div>
-
-            <hr/>
-            <label>Instructions</label>
-            <p>
-              After clicking Generate Letter, the fields below will be automatically populated. Please feel free to edit and personalize
-              the letter. Once you're happy with the letter, you have two options for sending it:</p>
-            <ol>
-              <li>Click Send Letter. This will put the letter in a queue for review (we need to make sure spammers can't misuse
-                our tool), and it will be sent to council shortly.</li>
-              <li>Copy/paste the letter into your email client of choice, and send it to:
-                <span *ngFor="let address of project.emailToAddresses; let isLast=last">
-                  <a href="mailto:{{address}}">{{address}}</a>{{isLast ? '' : ', '}}
-                </span>
-              </li>
-            </ol>
-
-            <div class="form-group" #letterSubjectGroup>
-              <label>Letter subject</label>
-              <input type="text" class="form-control" [(ngModel)]="letterSubject" name="letterSubject" placeholder="TBD" rows="16" />
-            </div>
-
-            <div class="form-group">
-              <label>Letter body</label>
-              <textarea class="form-control" [(ngModel)]="letterBody" name="letterBody" placeholder="Will be filled in when you click Generate Letter"
-                rows="16"></textarea>
-            </div>
-
-            <div class="form-group">
-              <label class="form-check-label">
-                <input type="checkbox" name="join" [(ngModel)]="joinMailingList" class="form-check-input" />Join the Abundant Housing Vancouver mailing list
-              </label>
-            </div>
-
-            <div class="form-group">
-              <button (click)="sendLetter();letterSent.show()" class="btn btn-primary" [disabled]="!readyToSendLetter() || disableGenerateAndSend">{{sendLetterButtonText}}</button>
-            </div>
-          </form>
-        </div>
-
-        <app-modal #letterSent>
-          <div class="app-modal-header">
-            <strong>{{messageSentModalDialogHeader}}</strong>
-          </div>
-          <div class="app-modal-body">
-            {{messageSentModalDialogBody}}
-          </div>
-          <div class="app-modal-footer">
-            <button type="button" class="btn btn-primary" (click)="letterSent.hide()">Close</button>
-          </div>
-        </app-modal>
-
-        <app-modal #overwriteWarning>
-          <div class="app-modal-header">
-            <strong>Warning</strong>
-          </div>
-          <div class="app-modal-body">
-            If you click Generate Letter it will overwrite the current letter text. Are you sure?
-          </div>
-          <div class="app-modal-footer">
-            <button type="button" class="btn btn-primary" (click)="overwriteWarning.hide()">Cancel</button>
-            <button type="button" class="btn btn-primary" (click)="generateText();overwriteWarning.hide()">Generate Letter</button>
-          </div>
-        </app-modal>
-
+  <div class='mx-auto xl:max-w-md'>
+    <div class='m-2'>
+      <div [hidden]="!projectFailedToLoad">
+        <h1>404 - Could Not Find Project</h1>
+        Project failed to load. Please try reloading the page, and if it still doesn't work
+        <a href="mailto:info@abundanthousingvancouver.com?subject=Generator not working&body=Hi, I was unable to access the letter generator at {{pageURL}}">
+          email us with relevant technical info (browser version, OS)
+        </a>
+        or <a href="https://github.com/rgwood/AHVLetterBuilder/issues/new">file an issue on GitHub</a>. Thanks!
       </div>
+
+      <div [hidden]="projectFailedToLoad">
+        <h1 class="pb-2">{{project.name}}</h1>
+        <markdown class="leading-normal">{{project.description}}</markdown>
+        <form #letterForm="ngForm" disabled="true">
+          <div class="panel">
+            <div class="panel-header">
+              Your Information
+            </div>
+            <div class="p-3">
+              <div class="form-group">
+                <label class="form-label" for="nameInput">Full Name (required)</label>
+                <input [(ngModel)]="name" #nameInput="ngModel" name="fullName" class="text-input" placeholder="Jane Doe"
+                  [ngClass]="{'border-red': nameInput.invalid && nameInput.dirty}" required />
+                <div [hidden]=" nameInput.valid || nameInput.pristine" class="input-error-message">
+                  Name is required
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="emailAddressInput">Email Address (required)</label>
+                <input type="email" [(ngModel)]="emailAddress" #emailInput="ngModel" name="emailAddress" class="text-input"
+                  id="emailAddressInput" placeholder="address@domain.com" required email />
+                <div [hidden]=" emailInput.valid || emailInput.pristine" class="input-error-message">Please enter a
+                  valid email address</div>
+              </div>
+              <div class=form-group>
+                <label class="form-label" for="physicalAddressInput">Address (optional)</label>
+                <input [(ngModel)]="physicalAddress" name="physicalAddress" class="text-input" id="physicalAddressInput"
+                  placeholder="1234 Abundant Ave, Vancouver, V5T 6K5" />
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              Your relation to the project (choose all that apply)
+            </div>
+            <div class="p-3">
+              <div *ngFor="let reason of relationships; let i = index">
+                <label class="text-sm">
+                  <input type="checkbox" name="relationship{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Other (use full sentences)</label>
+                <input [(ngModel)]="customRelationship" name="customRelationshipInput" class="text-input" />
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">Why do you support this project? (choose all that apply)</div>
+            <div class="p-3">
+              <div *ngFor="let reason of supportReasons; let i = index;">
+                <label class="text-sm">
+                  <input type="checkbox" name="support{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+              </div>
+              <div *ngFor="let customSupportReason of customSupportReasons; let i = index;" class="form-group">
+                <label class="form-label">Custom reason {{i + 1}}</label>
+                <input [(ngModel)]="customSupportReason.text" name="customSupportReason{{i}}" class="text-input" />
+              </div>
+              <button type="button" class="button mt-2" (click)="addCustomSupportReason()" [disabled]="disableGenerateAndSend">
+                + Add other reason
+              </button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">What do you think could be improved? (choose all that apply)</div>
+            <div class="p-3">
+              <div *ngFor="let reason of improvements; let i = index;">
+                <label class="text-sm">
+                  <input type="checkbox" name="improve{{i}}" class="form-check-input" [(ngModel)]="reason.appliesToUser" />{{reason.description}}</label>
+              </div>
+              <div *ngFor="let customImprovement of customImprovements; let i = index;" class="form-group">
+                <label class="form-label">Custom suggestion {{i + 1}}</label>
+                <input [(ngModel)]="customImprovement.text" name="customImprovement{{i}}" class="text-input" />
+              </div>
+              <button class="button mt-2" (click)="addCustomImprovement()" [disabled]="disableGenerateAndSend">
+                + Add other suggestion
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group text-center md:text-right">
+            <button type="submit" (click)="warnAboutOverwrite() ? overwriteWarning.show() : generateText(); letterSubjectGroup.scrollIntoView();"
+              class="button text-lg font-extrabold bg-green-dark" [disabled]="!letterForm.form.valid || disableGenerateAndSend">Generate Letter</button>
+          </div>
+
+          <hr />
+          <h4 class="py-2">Instructions</h4>
+          <p>
+            After clicking Generate Letter, the fields below will be automatically populated. Please feel free to edit
+            and personalize
+            the letter. Once you're happy with the letter, you have two options for sending it:</p>
+          <ol>
+            <li>Click Send Letter. This will put the letter in a queue for review (we need to make sure spammers can't
+              misuse
+              our tool), and it will be sent to council shortly.</li>
+            <li>Copy/paste the letter into your email client of choice, and send it to:
+              <span *ngFor="let address of project.emailToAddresses; let isLast=last">
+                <a href="mailto:{{address}}">{{address}}</a>{{isLast ? '' : ', '}}
+              </span>
+            </li>
+          </ol>
+
+          <div class="form-group" #letterSubjectGroup>
+            <h4 class="py-2">Letter Subject</h4>
+            <input type="text" class="text-input" [(ngModel)]="letterSubject" name="letterSubject" placeholder="TBD"
+              rows="16" />
+          </div>
+
+          <div class="form-group">
+            <h4 class="py-2">Letter Body</h4>
+            <textarea class="text-input" [(ngModel)]="letterBody" name="letterBody" placeholder="Will be filled in when you click Generate Letter"
+              rows="16"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-check-label">
+              <input type="checkbox" name="join" [(ngModel)]="joinMailingList" class="form-check-input" />Join the
+              Abundant Housing Vancouver mailing list
+            </label>
+          </div>
+
+          <div class="form-group text-center md:text-right">
+            <button (click)="sendLetter();letterSent.show()" class="button text-lg font-extrabold bg-green-dark" [disabled]="!readyToSendLetter() || disableGenerateAndSend">{{sendLetterButtonText}}</button>
+          </div>
+        </form>
+      </div>
+
+      <app-modal #letterSent>
+        <div class="app-modal-header">{{messageSentModalDialogHeader}}</div>
+        <div class="app-modal-body">{{messageSentModalDialogBody}}</div>
+        <div class="app-modal-footer flex flex-row-reverse">
+          <button type="button" class="button" (click)="letterSent.hide()">Close</button>
+        </div>
+      </app-modal>
+
+      <app-modal #overwriteWarning>
+        <div class="app-modal-header">Warning</div>
+        <div class="app-modal-body">
+          If you click Generate Letter it will overwrite the current letter text. Are you sure?
+        </div>
+        <div class="app-modal-footer flex flex-row-reverse">
+          <button type="button" class="button" (click)="generateText();overwriteWarning.hide()">Generate Letter</button>
+          <button type="button" class="button mx-2" (click)="overwriteWarning.hide()">Cancel</button>
+        </div>
+      </app-modal>
+
     </div>
   </div>
 </div>

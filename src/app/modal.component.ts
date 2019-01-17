@@ -1,30 +1,27 @@
 import {Component} from '@angular/core';
 // from this awesome Stack Overflow comment: https://stackoverflow.com/a/40144809
+// then adapted to Tailwind CSS with this: https://codeburst.io/creating-a-modal-dialog-with-tailwind-css-42722c9aea4f
 @Component({
   selector: 'app-modal',
   template: `
-  <div (click)="onContainerClicked($event)" class="modal fade" tabindex="-1" [ngClass]="{'in': visibleAnimate}"
-       [ngStyle]="{'display': visible ? 'block' : 'none', 'opacity': visibleAnimate ? 1 : 0}">
-    <div class="modal-dialog">
+  <div (click)="onContainerClicked($event)"
+    class="modal animated fadeIn fixed pin z-10000 overflow-auto bg-smoke-light flex flex-col justify-center" tabindex="-1"
+      [ngStyle]="{'display': visible ? 'flex' : 'none'}">
+    <div class="relative bg-white w-full max-w-md m-auto flex-col flex rounded-lg shadow-lg border my-auto">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="bg-grey-light text-lg text-blue-darkest p-3 font-medium">
           <ng-content select=".app-modal-header"></ng-content>
         </div>
-        <div class="modal-body">
+        <div class="p-3 text-blue-darkest">
           <ng-content select=".app-modal-body"></ng-content>
         </div>
-        <div class="modal-footer">
+        <div class="px-3 pb-3">
           <ng-content select=".app-modal-footer"></ng-content>
         </div>
       </div>
     </div>
   </div>
-  `,
-  styles: [`
-    .modal {
-      background: rgba(0,0,0,0.6);
-    }
-  `]
+  `
 })
 export class ModalComponent {
 
@@ -35,12 +32,10 @@ export class ModalComponent {
 
   public show(): void {
     this.visible = true;
-    setTimeout(() => this.visibleAnimate = true, 100);
   }
 
   public hide(): void {
-    this.visibleAnimate = false;
-    setTimeout(() => this.visible = false, 300);
+    this.visible = false;
   }
 
   public onContainerClicked(event: MouseEvent): void {
