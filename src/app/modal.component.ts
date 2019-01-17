@@ -5,9 +5,9 @@ import {Component} from '@angular/core';
   selector: 'app-modal',
   template: `
   <div (click)="onContainerClicked($event)"
-    class="modal animated fadeIn fixed pin z-50 overflow-auto bg-smoke-light flex" tabindex="-1"
-      [ngStyle]="{'display': visible ? 'block' : 'none'}">
-    <div class="relative bg-white w-full max-w-md m-auto flex-col flex rounded-lg shadow-lg border">
+    class="modal animated fadeIn fixed pin z-10000 overflow-auto bg-smoke-light flex flex-col justify-center" tabindex="-1"
+      [ngStyle]="{'display': visible ? 'flex' : 'none'}">
+    <div class="relative bg-white w-full max-w-md m-auto flex-col flex rounded-lg shadow-lg border my-auto">
       <div class="modal-content">
         <div class="bg-grey-light text-lg text-blue-darkest p-3 font-medium">
           <ng-content select=".app-modal-header"></ng-content>
