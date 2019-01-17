@@ -11,7 +11,7 @@ import { ModalComponent } from './modal.component';
 import { environment } from '../environments/environment';
 
 @Component({
-  selector: 'app-root',
+  selector: 'letter-builder',
   templateUrl: './letter-builder.component.html',
   styleUrls: ['./letter-builder.component.css'],
   providers: [DataService]
