@@ -80,6 +80,10 @@
     @apply opacity-50 cursor-not-allowed;
 }
 
+markdown > p {
+    @apply mt-2;
+}
+
  /**
   * This injects all of Tailwind's utility classes, generated based on your
   * config file.
